@@ -316,6 +316,29 @@ func carica_partita() -> Dictionary:
 		return st if st is Dictionary else {}
 	return {}
 
+## Campagne con codice di 6 caratteri: si riprendono da qualsiasi dispositivo conoscendo il codice.
+const CAMPAGNE := "britishway/campagne"
+
+
+func salva_campagna(codice: String, dati: Dictionary) -> bool:
+	if not await sign_in():
+		return false
+	var r := await db_put(CAMPAGNE + "/" + codice, {"json": JSON.stringify(dati), "quando": {".sv": "timestamp"}})
+	return r["code"] == 200
+
+
+func carica_campagna(codice: String) -> Dictionary:
+	if not await sign_in():
+		return {}
+	var r := await db_get(CAMPAGNE + "/" + codice)
+	if r["code"] == 200 and r["data"] is Dictionary and r["data"].has("json"):
+		var d = JSON.parse_string(str(r["data"]["json"]))
+		return d if d is Dictionary else {}
+	if r["code"] != 200:
+		last_error = "errore %d" % r["code"]
+	return {}
+
+
 func cancella_partita() -> void:
 	if await sign_in():
 		await db_delete(SALVA + "/" + uid)

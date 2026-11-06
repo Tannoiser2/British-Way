@@ -67,6 +67,9 @@ var sel_gioco_btns: Dictionary = {}
 var campagna: Dictionary = {}       # campagna End of Empire in corso (vuoto = partita singola)
 var camp_prewar := true
 var camp_lbl: Label
+var camp_codice_edit: LineEdit
+var _camp_cloud_occupato := false
+var _camp_cloud_di_nuovo := false
 
 
 func _ready() -> void:
@@ -263,6 +266,23 @@ func _costruisci_menu() -> void:
 	Tema.tasto_carta(bcc)
 	bcc.pressed.connect(_riprendi_campagna.bind(true))
 	rc2.add_child(bcc)
+	var rc3 := HBoxContainer.new()
+	rc3.add_theme_constant_override("separation", 10)
+	pv.add_child(rc3)
+	var lc := _lbl_carta("Riprendi da un altro dispositivo con il codice della campagna:", 16)
+	rc3.add_child(lc)
+	camp_codice_edit = LineEdit.new()
+	camp_codice_edit.placeholder_text = "Codice"
+	camp_codice_edit.max_length = 6
+	camp_codice_edit.custom_minimum_size = Vector2(130, 40)
+	camp_codice_edit.add_theme_color_override("font_placeholder_color", Tema.INK_FAINT)
+	rc3.add_child(camp_codice_edit)
+	var bcod := Button.new()
+	bcod.text = "Riprendi con codice"
+	bcod.custom_minimum_size = Vector2(170, 40)
+	Tema.tasto_carta(bcod, true)
+	bcod.pressed.connect(_riprendi_campagna_codice)
+	rc3.add_child(bcod)
 	camp_lbl = _lbl_carta("", 15)
 	camp_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	pv.add_child(camp_lbl)
@@ -936,6 +956,7 @@ func _testo_stato() -> String:
 		var at: Array = []
 		for k in c["attivi"]:
 			at.append(Campagna.dati_campagna().get(k, {}).get("titolo", k))
+		t.append("[color=#f0cf6e]Codice campagna: [b]%s[/b]%s[/color]" % [str(campagna.get("codice", "")), "" if campagna.is_empty() else (" · salvata su Firebase" if campagna.get("cloud_ok", false) else " · salvataggio online non ancora riuscito")])
 		t.append("[color=#f0cf6e][b]Campagna End of Empire[/b] · partita %d di 4 · Prestigio imperiale [b]%d[/b]/15 · Politica: %s%s%s[/color]" % [Campagna.ORDINE.find(g) + 1, int(c["prestigio"]), Campagna.NOMI_POLITICA[c["politica"]], (" · in corso: " + ", ".join(at)) if not at.is_empty() else "", (" · %s sulla carta" % m.pz(int(c["truppe_carta"]), "t")) if int(c["truppe_carta"]) > 0 else ""])
 	var stima := m.stima_propaganda()
 	t.append("[color=#c9a24a]Se ci fosse ora la Propaganda: Volontà Politica %s%d[/color]" % ["+" if stima >= 0 else "", stima])
@@ -1123,8 +1144,7 @@ func _salva_locale() -> void:
 		return
 	if not campagna.is_empty():
 		_salva_campagna()
-		if atti.size() % 4 == 0:
-			_salva_cloud(true)
+		_salva_campagna_cloud()
 		return
 	var f := FileAccess.open(_file_salva(gioco_id), FileAccess.WRITE)
 	if f:
@@ -1165,6 +1185,12 @@ var _cloud_occupato := false
 func _salva_cloud(silenzioso: bool = false) -> void:
 	if online or m == null or _cloud_occupato:
 		return
+	if not campagna.is_empty() and campagna.has("codice"):
+		if not silenzioso:
+			info_lbl.text = "Salvataggio della campagna %s su Firebase…" % campagna["codice"]
+		await _salva_campagna_cloud()
+		if not silenzioso:
+			info_lbl.text = ("Campagna %s salvata su Firebase: riprendila da qualsiasi dispositivo con questo codice." % campagna["codice"]) if campagna.get("cloud_ok", false) else "Salvataggio online non riuscito: " + rete.last_error
 	_cloud_occupato = true
 	if not silenzioso:
 		info_lbl.text = "Salvataggio online in corso…"
@@ -1397,13 +1423,15 @@ func _nuova_campagna(modo: String) -> void:
 		late.append("E%d" % (i + 9))
 	early.shuffle()
 	late.shuffle()
-	campagna = {"seme": rng.randi() % 100000000 + 1, "controllo": _controllo_da_modo(modo), "prewar": "caso" if camp_prewar else 0,
+	campagna = {"codice": _nuovo_codice_campagna(), "seme": rng.randi() % 100000000 + 1, "controllo": _controllo_da_modo(modo), "prewar": "caso" if camp_prewar else 0,
 		"prestigio": 13, "esiti": {}, "early": early, "late": late, "indice": 0, "prev": "", "correnti": [], "atti": []}
 	online = false
 	_avvia_gioco_campagna()
 
 
 func _avvia_gioco_campagna() -> void:
+	if not campagna.has("codice"):
+		campagna["codice"] = _nuovo_codice_campagna()
 	var k := int(campagna["indice"])
 	var g: String = Campagna.ORDINE[k]
 	if (campagna["correnti"] as Array).is_empty():
@@ -1430,10 +1458,16 @@ func _salva_campagna() -> void:
 func _riprendi_campagna(cloud: bool) -> void:
 	var d = null
 	if cloud:
-		menu_msg.text = "Carico la campagna salvata online…"
-		var tutti = await rete.carica_partita()
-		if tutti is Dictionary:
-			d = tutti.get("campagna", null)
+		var fl := FileAccess.open(FILE_CAMPAGNA, FileAccess.READ)
+		var loc = JSON.parse_string(fl.get_as_text()) if fl else null
+		var code: String = str(loc.get("codice", "")) if loc is Dictionary else ""
+		if code == "":
+			menu_msg.text = "Su questo dispositivo non c'è un codice di campagna: scrivilo nella casella e premi «Riprendi con codice»."
+			return
+		menu_msg.text = "Carico la campagna %s da Firebase…" % code
+		d = await rete.carica_campagna(code)
+		if d is Dictionary:
+			d["codice"] = code
 	else:
 		var f := FileAccess.open(FILE_CAMPAGNA, FileAccess.READ)
 		if f:
@@ -1459,7 +1493,7 @@ func _aggiorna_menu_campagna() -> void:
 		if k >= 4:
 			camp_lbl.text = "Ultima campagna conclusa con Prestigio imperiale %d: %s." % [int(d["prestigio"]), _esito_campagna(int(d["prestigio"]))]
 		else:
-			camp_lbl.text = "Campagna salvata: Prestigio imperiale %d, prossima partita %s." % [int(d["prestigio"]), GIOCHI[Campagna.ORDINE[k]]["nome"]]
+			camp_lbl.text = "Campagna salvata (codice %s): Prestigio imperiale %d, prossima partita %s." % [str(d.get("codice", "-")), int(d["prestigio"]), GIOCHI[Campagna.ORDINE[k]]["nome"]]
 	else:
 		camp_lbl.text = ""
 
@@ -1484,8 +1518,8 @@ func _fine_campagna() -> String:
 	campagna["atti"] = []
 	atti = []
 	_salva_campagna()
-	_salva_cloud(true)
-	var t := "Campagna: %s si chiude con %s. Prestigio imperiale ora %d." % [GIOCHI[g]["nome"], Campagna.NOMI_ESITO[es], int(campagna["prestigio"])]
+	_salva_campagna_cloud()
+	var t := "Campagna %s: %s si chiude con %s. Prestigio imperiale ora %d." % [str(campagna.get("codice", "")), GIOCHI[g]["nome"], Campagna.NOMI_ESITO[es], int(campagna["prestigio"])]
 	if int(campagna["indice"]) >= 4:
 		t += "\n\nFINE DELLA CAMPAGNA: %s." % _esito_campagna(int(campagna["prestigio"]))
 	else:
@@ -1498,3 +1532,53 @@ func _ok_fine() -> void:
 		_avvia_gioco_campagna()
 	else:
 		_torna_menu()
+
+
+## Codice di campagna: 6 caratteri senza quelli che si confondono (0/O, 1/I/L).
+func _nuovo_codice_campagna() -> String:
+	var alfabeto := "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
+	var c := ""
+	for i in 6:
+		c += alfabeto[rng.randi() % alfabeto.length()]
+	return c
+
+
+## Salva la campagna su Firebase sotto il suo codice (dopo ogni atto; se un salvataggio è in corso, ne fa un altro alla fine).
+func _salva_campagna_cloud() -> void:
+	if campagna.is_empty() or not campagna.has("codice"):
+		return
+	if _camp_cloud_occupato:
+		_camp_cloud_di_nuovo = true
+		return
+	_camp_cloud_occupato = true
+	while true:
+		_camp_cloud_di_nuovo = false
+		var copia := campagna.duplicate(true)
+		copia["atti"] = atti.duplicate(true)
+		copia["salvata"] = Time.get_datetime_string_from_system()
+		var ok = await rete.salva_campagna(str(campagna["codice"]), copia)
+		campagna["cloud_ok"] = ok
+		if not _camp_cloud_di_nuovo:
+			break
+	_camp_cloud_occupato = false
+	if m != null and partita.visible:
+		stato_lbl.text = _testo_stato()
+
+
+func _riprendi_campagna_codice() -> void:
+	var code := camp_codice_edit.text.strip_edges().to_upper()
+	if code.length() != 6:
+		menu_msg.text = "Il codice della campagna ha 6 caratteri."
+		return
+	menu_msg.text = "Carico la campagna %s da Firebase…" % code
+	var d = await rete.carica_campagna(code)
+	if not (d is Dictionary) or not d.has("indice"):
+		menu_msg.text = "Nessuna campagna con il codice %s.%s" % [code, ("" if rete.last_error == "" else " (" + rete.last_error + ")")]
+		return
+	if int(d["indice"]) >= 4:
+		menu_msg.text = "La campagna %s è già conclusa (Prestigio imperiale %d)." % [code, int(d["prestigio"])]
+		return
+	campagna = d
+	campagna["codice"] = code
+	online = false
+	_avvia_gioco_campagna()

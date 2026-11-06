@@ -39,7 +39,9 @@ quattro giochi COIN per due giocatori, Britannici contro insorti.
 Le quattro partite in ordine storico (Palestina, Malesia, Kenya, Cipro), contro l'IA o in due: Prestigio imperiale
 (da 13, tra 0 e 15), Politica coloniale scelta dai Britannici dopo la prima Propaganda, 18 eventi di campagna
 (mazzi Early e Late, carte ricomposte in italiano: tre per partita, all'inizio e dopo il primo e il secondo Reset)
-e, a scelta, le tabelle pre-belliche. La campagna si salva da sola sul dispositivo e su Firebase.
+e, a scelta, le tabelle pre-belliche. La campagna si salva da sola sul dispositivo e, dopo ogni turno, su Firebase sotto un codice di 6 caratteri
+(mostrato nel pannello di stato, in `britishway/campagne/<codice>`): con quel codice la si riprende da qualsiasi dispositivo
+(menu, «Riprendi con codice»).
 Codice in `scripts/campagna.gd`; prova completa IA contro IA: `godot --headless -s res://tests/campagna.gd -- 21 40`.
 La campagna è solo locale (non online).
 - `tools/controlla_glifi.py` — verifica che ogni carattere usato esista nei font.
