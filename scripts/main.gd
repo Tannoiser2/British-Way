@@ -62,6 +62,15 @@ var regole_txt: RichTextLabel
 var carta_pop_tex: TextureRect
 var menu_msg: Label
 var fine_txt: RichTextLabel
+var camp_scr: Control
+var plancia: PlanciaCampagna
+var camp_info: VBoxContainer
+var camp_btn_gioca: Button
+var camp_btn_menu: Button
+var btn_salva_online: Button
+var btn_campagna: Button
+var _camp_dal_gioco := false
+var _dlg_info := false
 var _carta_mostrata := ""
 var nome_edit: LineEdit
 var codice_edit: LineEdit
@@ -82,6 +91,7 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_costruisci_menu()
 	_costruisci_partita()
+	_costruisci_schermata_campagna()
 	partita.visible = false
 	menu.visible = true
 	_seleziona_gioco("palestina")
@@ -497,6 +507,14 @@ func _costruisci_partita() -> void:
 	bs.custom_minimum_size = Vector2(110, 44)
 	bs.pressed.connect(_salva_cloud)
 	th.add_child(bs)
+	btn_salva_online = bs
+	btn_campagna = Button.new()
+	btn_campagna.text = "Campagna"
+	btn_campagna.tooltip_text = "Situazione della campagna: Prestigio, esiti, eventi"
+	btn_campagna.custom_minimum_size = Vector2(110, 44)
+	btn_campagna.pressed.connect(func(): _mostra_campagna(true))
+	btn_campagna.visible = false
+	th.add_child(btn_campagna)
 	var bm := Button.new()
 	bm.text = "Menu"
 	bm.custom_minimum_size = Vector2(80, 44)
@@ -724,6 +742,10 @@ func avvia(g: String, sm: int, o2: Dictionary, atti_prec: Array, ans_prec: Array
 	storia = []
 	menu.visible = false
 	partita.visible = true
+	camp_scr.visible = false
+	var in_camp: bool = o2.has("campagna")
+	btn_campagna.visible = in_camp
+	btn_salva_online.visible = not in_camp
 	(partita.find_child("Sotto", true, false) as Label).text = "%s %s · Britannici contro %s" % [GIOCHI[g]["nome"], GIOCHI[g]["anni"], GIOCHI[g]["ins"]]
 	_disposizione(g == "cipro")
 	mappa.imposta(m)
@@ -1160,6 +1182,8 @@ func _zoom(k: String) -> void:
 
 func _fine() -> void:
 	_mostra_domanda("")
+	_dlg_info = false
+	fine_dlg.title = "Fine della partita"
 	var fine: Dictionary = m.s["fine"]
 	var v: String = fine.get("v", "")
 	var chi := "Vittoria britannica" if v == "brit" else ("Vittoria " + m.nome_faz("ins") if v == "ins" else "Pareggio")
@@ -1194,8 +1218,7 @@ func _fine() -> void:
 	fine_dlg.ok_button_text = "Torna al menu"
 	if not campagna.is_empty() and m.in_campagna():
 		t += "\n[b]Campagna[/b]\n" + _fine_campagna()
-		if int(campagna["indice"]) < 4:
-			fine_dlg.ok_button_text = "Prossima partita: " + GIOCHI[Campagna.ORDINE[int(campagna["indice"])]]["nome"]
+		fine_dlg.ok_button_text = "Situazione della campagna"
 	else:
 		_cancella_locale()
 	fine_dlg.dialog_text = ""
@@ -1521,7 +1544,8 @@ func _nuova_campagna(modo: String) -> void:
 	campagna = {"codice": _nuovo_codice_campagna(), "seme": rng.randi() % 100000000 + 1, "controllo": _controllo_da_modo(modo), "prewar": "caso" if camp_prewar else 0,
 		"prestigio": 13, "esiti": {}, "early": early, "late": late, "indice": 0, "prev": "", "correnti": [], "atti": []}
 	online = false
-	_avvia_gioco_campagna()
+	_salva_campagna()
+	_mostra_campagna(false)
 
 
 func _avvia_gioco_campagna() -> void:
@@ -1570,12 +1594,12 @@ func _riprendi_campagna(cloud: bool) -> void:
 	if not (d is Dictionary) or not d.has("indice"):
 		menu_msg.text = "Nessuna campagna da riprendere."
 		return
-	if int(d["indice"]) >= 4:
-		menu_msg.text = "La campagna salvata è già conclusa (Prestigio imperiale %d)." % int(d["prestigio"])
-		return
 	campagna = d
 	online = false
-	_avvia_gioco_campagna()
+	if int(d["indice"]) >= 4 or (d.get("atti", []) as Array).is_empty():
+		_mostra_campagna(false)
+	else:
+		_avvia_gioco_campagna()
 
 
 func _aggiorna_menu_campagna() -> void:
@@ -1606,6 +1630,12 @@ func _fine_campagna() -> String:
 	var g: String = m.gioco()
 	var es: String = m.s["camp"]["esito"]
 	campagna["esiti"][g] = es
+	if not campagna.has("storia"):
+		campagna["storia"] = []
+	var fine: Dictionary = m.s["fine"]
+	campagna["storia"].append({"g": g, "esito": es, "politica": str(m.s["camp"]["politica"]), "p0": int(campagna["prestigio"]),
+		"p1": int(m.s["camp"]["prestigio"]), "eventi": (m.s["camp"].get("pescati", []) as Array).duplicate(), "prewar": int(m.s["camp"]["prewar"]),
+		"variazioni": (m.s["camp"].get("variazioni", []) as Array).duplicate(), "v": str(fine.get("v", "")), "motivo": str(fine.get("m", "")), "pw": int(m.s["pw"])})
 	campagna["prestigio"] = int(m.s["camp"]["prestigio"])
 	campagna["prev"] = es
 	campagna["indice"] = int(campagna["indice"]) + 1
@@ -1623,8 +1653,12 @@ func _fine_campagna() -> String:
 
 
 func _ok_fine() -> void:
-	if not campagna.is_empty() and int(campagna.get("indice", 4)) < 4:
-		_avvia_gioco_campagna()
+	if _dlg_info:
+		_dlg_info = false
+		fine_dlg.title = "Fine della partita"
+		return
+	if not campagna.is_empty() and m != null and m.in_campagna():
+		_mostra_campagna(false)
 	else:
 		_torna_menu()
 
@@ -1676,4 +1710,194 @@ func _riprendi_campagna_codice() -> void:
 	campagna = d
 	campagna["codice"] = code
 	online = false
+	_avvia_gioco_campagna()
+
+
+# ================================================================ SCHERMATA DELLA CAMPAGNA
+
+func _costruisci_schermata_campagna() -> void:
+	camp_scr = Control.new()
+	camp_scr.set_anchors_preset(Control.PRESET_FULL_RECT)
+	camp_scr.visible = false
+	add_child(camp_scr)
+	var bg := ColorRect.new()
+	bg.color = Tema.BG
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	camp_scr.add_child(bg)
+	var h := HBoxContainer.new()
+	h.set_anchors_preset(Control.PRESET_FULL_RECT)
+	h.offset_left = 10
+	h.offset_top = 10
+	h.offset_right = -10
+	h.offset_bottom = -10
+	h.add_theme_constant_override("separation", 10)
+	camp_scr.add_child(h)
+	plancia = PlanciaCampagna.new()
+	plancia.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	plancia.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	plancia.gioco_cliccato.connect(_scheda_partita_campagna)
+	h.add_child(plancia)
+	var dx := PanelContainer.new()
+	dx.custom_minimum_size = Vector2(430, 0)
+	dx.add_theme_stylebox_override("panel", Tema.carta(12))
+	h.add_child(dx)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 8)
+	dx.add_child(v)
+	var sc := ScrollContainer.new()
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	v.add_child(sc)
+	camp_info = VBoxContainer.new()
+	camp_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	camp_info.add_theme_constant_override("separation", 4)
+	sc.add_child(camp_info)
+	camp_btn_gioca = Button.new()
+	camp_btn_gioca.custom_minimum_size = Vector2(0, 48)
+	Tema.tasto_carta(camp_btn_gioca, true)
+	camp_btn_gioca.pressed.connect(_camp_avanti)
+	v.add_child(camp_btn_gioca)
+	camp_btn_menu = Button.new()
+	camp_btn_menu.text = "Torna al menu"
+	camp_btn_menu.custom_minimum_size = Vector2(0, 38)
+	Tema.tasto_carta(camp_btn_menu)
+	camp_btn_menu.pressed.connect(func():
+		camp_scr.visible = false
+		_torna_menu())
+	v.add_child(camp_btn_menu)
+
+
+## Mostra la plancia della campagna. dal_gioco: aperta durante una partita (il tasto principale torna alla partita).
+func _mostra_campagna(dal_gioco: bool) -> void:
+	if campagna.is_empty():
+		return
+	_camp_dal_gioco = dal_gioco
+	var k := int(campagna.get("indice", 0))
+	var st: Array = campagna.get("storia", [])
+	var pross: String = Campagna.ORDINE[k] if k < 4 else ""
+	var prest := int(campagna["prestigio"])
+	if dal_gioco and m != null and m.in_campagna():
+		prest = int(m.s["camp"]["prestigio"])
+	plancia.imposta(st, prest, pross)
+	for c in camp_info.get_children():
+		c.queue_free()
+	camp_info.add_child(_lbl_carta("Situazione della campagna", 26, true))
+	var cod := _lbl_carta("Codice %s · %s" % [str(campagna.get("codice", "-")), _descr_controllo(campagna.get("controllo", {}))], 15)
+	cod.add_theme_color_override("font_color", Tema.INK_DIM)
+	camp_info.add_child(cod)
+	var p := _lbl_carta("Prestigio imperiale: %d" % prest, 22)
+	camp_info.add_child(p)
+	var es := _lbl_carta(("Esito finale: " if k >= 4 else "Se finisse ora: ") + _esito_campagna(prest), 17)
+	es.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	es.add_theme_color_override("font_color", Tema.NAVY if prest >= 11 else (Tema.RED if prest <= 4 else Tema.INK))
+	camp_info.add_child(es)
+	if dal_gioco and m != null and m.in_campagna():
+		var ora := _lbl_carta("In corso: %s, Politica «%s», Volontà Politica %d." % [GIOCHI[m.gioco()]["nome"], Campagna.NOMI_POLITICA[m.s["camp"]["politica"]], int(m.s["pw"])], 16)
+		ora.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		camp_info.add_child(ora)
+	camp_info.add_child(HSeparator.new())
+	for i in 4:
+		var g: String = Campagna.ORDINE[i]
+		var e := {}
+		for x in st:
+			if x["g"] == g:
+				e = x
+		_riga_partita_campagna(g, e, i == k)
+	# tasti
+	if dal_gioco:
+		camp_btn_gioca.text = "Torna alla partita"
+	elif k >= 4:
+		camp_btn_gioca.text = "Campagna conclusa: torna al menu"
+	else:
+		camp_btn_gioca.text = ("Inizia la campagna: " if k == 0 and (campagna.get("atti", []) as Array).is_empty() else "Gioca la prossima partita: ") + GIOCHI[pross]["nome"]
+	camp_btn_menu.visible = not dal_gioco and k < 4
+	menu.visible = false
+	partita.visible = false
+	camp_scr.visible = true
+
+
+func _descr_controllo(c: Dictionary) -> String:
+	var b: String = c.get("brit", "umano")
+	var i: String = c.get("ins", "umano")
+	if b == "ia" and i == "ia":
+		return "IA contro IA"
+	if b == "umano" and i == "umano":
+		return "due giocatori"
+	return "tu Britannici contro l'IA" if b == "umano" else "tu insorti contro l'IA"
+
+
+func _riga_partita_campagna(g: String, e: Dictionary, prossima: bool) -> void:
+	var t := _lbl_carta(GIOCHI[g]["nome"] + "  " + GIOCHI[g]["anni"], 21, true)
+	camp_info.add_child(t)
+	var righe: Array = []
+	if e.is_empty():
+		righe.append("Prossima partita." if prossima else "Da giocare.")
+	else:
+		righe.append("Esito: %s · Politica «%s»" % [Campagna.NOMI_ESITO[e["esito"]], Campagna.NOMI_POLITICA.get(e["politica"], e["politica"])])
+		righe.append("Prestigio imperiale: da %d a %d" % [int(e["p0"]), int(e["p1"])])
+		if str(e.get("motivo", "")) != "":
+			righe.append(str(e["motivo"]))
+		if int(e.get("prewar", 0)) > 0:
+			righe.append("Tabella pre-bellica (%d): %s" % [int(e["prewar"]), Campagna.PREBELLICHE[g][int(e["prewar"]) - 1]])
+		for vv in e.get("variazioni", []):
+			righe.append("Prestigio %+d: %s" % [int(vv["d"]), str(vv["m"])])
+	var l := _lbl_carta("\n".join(righe), 15)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.custom_minimum_size = Vector2(380, 0)
+	l.add_theme_color_override("font_color", Tema.INK_DIM if e.is_empty() else Tema.INK)
+	camp_info.add_child(l)
+	var ev: Array = e.get("eventi", []) if not e.is_empty() else []
+	if ev.is_empty() and prossima and _camp_dal_gioco and m != null and m.in_campagna() and m.gioco() == g:
+		ev = m.s["camp"].get("pescati", [])
+	if not ev.is_empty():
+		var gr := HFlowContainer.new()
+		gr.add_theme_constant_override("h_separation", 4)
+		gr.add_theme_constant_override("v_separation", 4)
+		camp_info.add_child(gr)
+		var dc := Campagna.dati_campagna()
+		for id in ev:
+			var b := Button.new()
+			b.text = "%s %s" % [id, dc.get(id, {}).get("titolo", "")]
+			b.tooltip_text = "Evento di campagna: clicca per vedere la carta"
+			b.custom_minimum_size = Vector2(0, 30)
+			Tema.tasto_carta(b)
+			b.add_theme_font_size_override("font_size", 15)
+			b.pressed.connect(_mostra_carta.bind(id))
+			gr.add_child(b)
+	camp_info.add_child(HSeparator.new())
+
+
+func _scheda_partita_campagna(g: String) -> void:
+	for x in campagna.get("storia", []):
+		if x["g"] == g:
+			menu_msg.text = ""
+			_mostra_carta_gioco_info(g, x)
+			return
+
+
+func _mostra_carta_gioco_info(g: String, e: Dictionary) -> void:
+	fine_dlg.title = "Campagna: " + GIOCHI[g]["nome"]
+	var t := "[center][b]%s[/b][/center]\n[center][i]%s[/i][/center]\n\n" % [GIOCHI[g]["nome"], str(e.get("motivo", ""))]
+	t += "Esito: %s con Politica «%s»\nVolontà Politica finale: %d\nPrestigio imperiale: da %d a %d\n" % [Campagna.NOMI_ESITO[e["esito"]], Campagna.NOMI_POLITICA.get(e["politica"], ""), int(e.get("pw", 0)), int(e["p0"]), int(e["p1"])]
+	var dc := Campagna.dati_campagna()
+	if not (e.get("eventi", []) as Array).is_empty():
+		t += "\n[b]Eventi di campagna[/b]\n"
+		for id in e["eventi"]:
+			t += "• %s %s\n" % [id, dc.get(id, {}).get("titolo", "")]
+	fine_txt.text = t
+	fine_dlg.ok_button_text = "Chiudi"
+	_dlg_info = true
+	fine_dlg.popup_centered(Vector2(680, 480))
+
+
+func _camp_avanti() -> void:
+	if _camp_dal_gioco:
+		camp_scr.visible = false
+		partita.visible = true
+		return
+	if int(campagna.get("indice", 4)) >= 4:
+		camp_scr.visible = false
+		_torna_menu()
+		return
+	camp_scr.visible = false
 	_avvia_gioco_campagna()

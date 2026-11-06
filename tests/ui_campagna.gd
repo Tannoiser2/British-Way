@@ -7,6 +7,10 @@ func _init() -> void:
 	root.size = Vector2i(1600, 900)
 	await process_frame
 	scena._nuova_campagna("hotseat")
+	await process_frame
+	await RenderingServer.frame_post_draw
+	root.get_texture().get_image().save_png(a[1].replace(".png", "_0.png"))
+	scena._camp_avanti()
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 5
 	var foto := 0
@@ -23,6 +27,20 @@ func _init() -> void:
 				foto = 1
 			scena.fine_dlg.hide()
 			scena._ok_fine()
+			for j in 3:
+				await process_frame
+			await RenderingServer.frame_post_draw
+			root.get_texture().get_image().save_png(a[1].replace(".png", "_%d.png" % int(scena.campagna["indice"])))
+			if int(scena.campagna["indice"]) == 2:
+				scena._scheda_partita_campagna("palestina")
+				for j in 3:
+					await process_frame
+				await RenderingServer.frame_post_draw
+				root.get_texture().get_image().save_png(a[1].replace(".png", "_scheda.png"))
+				scena.fine_dlg.hide()
+				scena._ok_fine()
+			if int(scena.campagna["indice"]) < 4:
+				scena._camp_avanti()
 			if int(scena.campagna["indice"]) >= 4:
 				break
 			continue

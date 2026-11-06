@@ -65,6 +65,9 @@ func cambia_prestigio(d: int, motivo: String) -> void:
 		return
 	var v: int = clamp(int(s["camp"]["prestigio"]) + d, 0, 15)
 	s["camp"]["prestigio"] = v
+	if not s["camp"].has("variazioni"):
+		s["camp"]["variazioni"] = []
+	s["camp"]["variazioni"].append({"d": d, "m": motivo})
 	nota("Prestigio imperiale %s%d (%s): ora %d" % ["+" if d > 0 else "", d, motivo, v])
 
 
@@ -207,6 +210,9 @@ func camp_evento(a: Dictionary) -> void:
 	var id: String = lista[n]
 	var e: Dictionary = dati_campagna().get(id, {})
 	s["camp"]["ultimo"] = id
+	if not s["camp"].has("pescati"):
+		s["camp"]["pescati"] = []
+	s["camp"]["pescati"].append(id)
 	nota("— Evento di campagna: %s —" % e.get("titolo", id))
 	if has_method("ce_" + id):
 		call("ce_" + id)
