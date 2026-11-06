@@ -357,13 +357,13 @@ func _costruisci_partita() -> void:
 	lbl_mazzo.add_theme_font_size_override("font_size", 18)
 	lbl_mazzo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lbl_mazzo.clip_text = true
-	lbl_mazzo.custom_minimum_size = Vector2(60, 0)
+	lbl_mazzo.custom_minimum_size = Vector2(150, 0)
 	lbl_mazzo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	th.add_child(lbl_mazzo)
 	for k in [["−", "zoom_meno"], ["+", "zoom_piu"], ["Adatta", "zoom_adatta"]]:
 		var b := Button.new()
 		b.text = k[0]
-		b.custom_minimum_size = Vector2(44 if k[0].length() == 1 else 80, 44)
+		b.custom_minimum_size = Vector2(40 if k[0].length() == 1 else 72, 44)
 		b.pressed.connect(_zoom.bind(k[1]))
 		th.add_child(b)
 	btn_annulla = Button.new()
@@ -378,7 +378,7 @@ func _costruisci_partita() -> void:
 	th.add_child(br)
 	var bs := Button.new()
 	bs.text = "Salva online"
-	bs.custom_minimum_size = Vector2(120, 44)
+	bs.custom_minimum_size = Vector2(110, 44)
 	bs.pressed.connect(_salva_cloud)
 	th.add_child(bs)
 	var bm := Button.new()
@@ -533,7 +533,7 @@ func _titoletto(t: String) -> Label:
 
 func _chip(f: String) -> PanelContainer:
 	var p := PanelContainer.new()
-	p.custom_minimum_size = Vector2(240, 52)
+	p.custom_minimum_size = Vector2(230, 52)
 	p.add_theme_stylebox_override("panel", Tema.box(Tema.FAZ[f].darkened(0.35), Tema.FAZ[f], 2, 3, 6))
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", -2)
@@ -719,7 +719,7 @@ func _aggiorna_ui() -> void:
 		if m.carta_dati(c).get("propaganda", false):
 			break
 		a_prop += 1
-	lbl_mazzo.text = "Mazzo %d · Propaganda %d/%d" % [mazzo.size(), int(s["prop_fatte"]), int(s["prop_tot"])] if not m.finita() else "Partita conclusa"
+	lbl_mazzo.text = "Mazzo %d · Prop. %d/%d" % [mazzo.size(), int(s["prop_fatte"]), int(s["prop_tot"])] if not m.finita() else "Partita conclusa"
 	lbl_mazzo.tooltip_text = "Carte rimaste nel mazzo: %d. Propaganda giocate: %d di %d." % [mazzo.size(), int(s["prop_fatte"]), int(s["prop_tot"])]
 	lbl_mazzo.add_theme_color_override("font_color", Tema.TEXT_DIM)
 	btn_annulla.disabled = online or storia.is_empty()
