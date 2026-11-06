@@ -244,6 +244,12 @@ func _costruisci_menu() -> void:
 	Tema.tasto_carta(be, true)
 	be.pressed.connect(_entra_stanza)
 	r3.add_child(be)
+	var br2 := Button.new()
+	br2.text = "Rientra nell'ultima stanza online"
+	br2.custom_minimum_size = Vector2(0, 40)
+	Tema.tasto_carta(br2)
+	br2.pressed.connect(_rientra_stanza)
+	pv.add_child(br2)
 	menu_msg = _lbl_carta("", 18)
 	menu_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	pv.add_child(menu_msg)
@@ -644,7 +650,8 @@ func _turno_ia() -> void:
 	if ia_in_corso:
 		return
 	ia_in_corso = true
-	await get_tree().create_timer(0.45 if controllo["brit"] != controllo["ins"] or controllo["brit"] != "ia" else 0.25).timeout
+	var demo: bool = controllo["brit"] == "ia" and controllo["ins"] == "ia"
+	await get_tree().create_timer((0.6 if demo else 0.45) if ans.is_empty() else (0.2 if demo else 0.12)).timeout
 	if m == null or m.need == null or not partita.visible:
 		ia_in_corso = false
 		return
@@ -1134,40 +1141,117 @@ func _avvia_online(cfg: Dictionary, mia: String) -> void:
 	info_lbl.text = "Online nella stanza %s: tu giochi con %s." % [stanza, "i Britannici" if mia == "brit" else m.nome_faz("ins")]
 
 
-## Pubblica le risposte date localmente (atto n). Solo chi ha risposto pubblica.
+## Rientra nella stanza ricordata (dopo aver ricaricato la pagina): ricostruisce la partita dal registro online.
+func _rientra_stanza() -> void:
+	var ss := rete.load_session()
+	var code := str(ss.get("room", ""))
+	if code == "":
+		menu_msg.text = "Nessuna stanza online da riprendere su questo dispositivo."
+		return
+	menu_msg.text = "Rientro nella stanza %s…" % code
+	if not await rete.sign_in():
+		menu_msg.text = "Accesso a Firebase non riuscito: " + rete.last_error
+		return
+	var r = await rete.room(code)
+	if r.is_empty() or not r.has("game"):
+		menu_msg.text = "La stanza %s non esiste più o la partita non è iniziata." % code
+		return
+	var cfg = JSON.parse_string(str(r["game"]))
+	if not (cfg is Dictionary):
+		return
+	var seats: Dictionary = Rete._as_dict(r.get("seats", {}))
+	var mio := -1
+	for k in seats:
+		if seats[k] is Dictionary and seats[k].get("uid", "") == rete.uid:
+			mio = int(k)
+	if mio < 0:
+		menu_msg.text = "Non risulti seduto nella stanza %s." % code
+		return
+	stanza = code
+	posto = mio
+	var mia: String = cfg["host"] if mio == 0 else ("ins" if cfg["host"] == "brit" else "brit")
+	var dd = await rete.get_decisions(code, 0)
+	var chiavi: Array = dd.keys()
+	chiavi.sort()
+	var per_atto := {}
+	var ultimo := 0
+	for k in chiavi:
+		var d: Dictionary = dd[k]
+		var n := int(d.get("n", -1))
+		var rr: Array = d.get("r", [])
+		if not per_atto.has(n) or rr.size() >= (per_atto[n]["r"] as Array).size():
+			per_atto[n] = d
+		ultimo = int(k) + 1
+	var atti_rete: Array = []
+	var parziale: Array = []
+	var n2 := 0
+	while per_atto.has(n2):
+		var d2: Dictionary = per_atto[n2]
+		if d2.get("c", false):
+			atti_rete.append(d2["r"])
+		else:
+			parziale = d2["r"]
+			break
+		n2 += 1
+	online = true
+	net_k = ultimo
+	net_inviati = {}
+	controllo = {"brit": "umano" if mia == "brit" else "remoto", "ins": "umano" if mia == "ins" else "remoto"}
+	_seleziona_gioco(str(cfg["gioco"]))
+	avvia(str(cfg["gioco"]), int(cfg["seme"]), cfg.get("opz", {}), atti_rete, parziale)
+	info_lbl.text = "Di nuovo nella stanza %s." % code
+
+
+## Pubblica le risposte date localmente (atto n): vanno in coda e le spedisce un'unica routine di sincronizzazione,
+## che prima legge il registro (per non scavalcare le mosse dell'avversario) e poi scrive al primo numero libero.
+var _da_inviare: Array = []
+var _sync_attivo := false
+
+
 func _invia_rete(n: int, r: Array, concluso: bool) -> void:
 	if not online or stanza == "":
 		return
-	var key = "%d:%d" % [n, r.size()]
-	if net_inviati.has(key):
-		return
-	# pubblica solo se l'ultima risposta l'ha data questo dispositivo
 	if r.is_empty() and not concluso:
 		return
+	var key := "%d:%d" % [n, r.size()]
+	if net_inviati.has(key):
+		return
 	net_inviati[key] = true
-	var d := {"n": n, "r": r, "c": concluso}
-	var k := net_k
-	net_k += 1
-	var ok = await rete.post_decision(stanza, k, d)
-	if not ok:
-		# qualcun altro ha usato quel numero: si riprova al prossimo giro con il registro aggiornato
-		net_inviati.erase(key)
+	_da_inviare.append({"n": n, "r": r.duplicate(), "c": concluso})
+	_sync()
 
 
-var _poll_occupato := false
+func _sync() -> void:
+	if _sync_attivo or not online or stanza == "":
+		return
+	_sync_attivo = true
+	var giri := 0
+	while giri < 20:
+		giri += 1
+		await _leggi_rete()
+		if _da_inviare.is_empty():
+			break
+		var d: Dictionary = _da_inviare[0]
+		var ok = await rete.post_decision(stanza, net_k, d)
+		if ok:
+			net_k += 1
+			_da_inviare.pop_front()
+	_sync_attivo = false
 
 
 func _poll_rete() -> void:
-	if _poll_occupato:
-		return
-	_poll_occupato = true
+	_sync()
+
+
+func _leggi_rete() -> void:
 	var dd = await rete.get_decisions(stanza, net_k)
-	_poll_occupato = false
-	var chiavi = dd.keys()
+	var chiavi: Array = dd.keys()
 	chiavi.sort()
 	for k in chiavi:
+		if int(k) < net_k:
+			continue
 		var d: Dictionary = dd[k]
-		net_k = max(net_k, int(k) + 1)
+		net_k = int(k) + 1
 		var n := int(d.get("n", -1))
 		var r: Array = d.get("r", [])
 		net_inviati["%d:%d" % [n, r.size()]] = true

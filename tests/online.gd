@@ -19,6 +19,12 @@ func _init() -> void:
 				f.store_string(scena.stanza)
 				f.close()
 				break
+	elif ruolo == "rientro":
+		await create_timer(1.0).timeout
+		scena._rientra_stanza()
+		for i in 20:
+			await create_timer(0.5).timeout
+		print("MSG ", scena.menu_msg.text)
 	else:
 		var code := ""
 		for i in 100:
@@ -31,9 +37,13 @@ func _init() -> void:
 		scena.nome_edit.text = "Ospite"
 		scena._entra_stanza()
 	var t0 := Time.get_ticks_msec()
+	var ult := 0
 	while Time.get_ticks_msec() - t0 < int(a[2]) * 1000:
 		await create_timer(0.05).timeout
 		var m = scena.m
+		if Time.get_ticks_msec() - ult > 4000:
+			ult = Time.get_ticks_msec()
+			print(ruolo, " t=", (ult - t0) / 1000, " online=", scena.online, " atti=", scena.atti.size(), " ans=", scena.ans.size(), " need=", (m.need["f"] if m and m.need else "-"), " ctrl=", scena.controllo, " k=", scena.net_k)
 		if m == null or not scena.online:
 			continue
 		if m.finita():

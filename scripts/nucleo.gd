@@ -211,6 +211,8 @@ func chiedi(f: String, testo: String, opzioni: Array, extra: Dictionary = {}):
 		return opzioni[0]["v"]
 	if _i < _ans.size():
 		var v = _ans[_i]
+		if v is float and v == floor(v):
+			v = int(v)
 		_i += 1
 		for o in opzioni:
 			if str(o["v"]) == str(v):
