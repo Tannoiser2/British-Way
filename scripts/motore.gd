@@ -92,6 +92,33 @@ func valuta_brit() -> float:
 	var stima := float(stima_propaganda())
 	v += stima * peso
 	if cellule():
+		# minaccia: Sabotaggi probabili nei prossimi turni (spazi con Cellule clandestine)
+		var minacce: Array = []
+		for id in ordine:
+			var x := X(id)
+			if int(x["u"]) <= 0:
+				continue
+			var t := tipo(id)
+			var val := 0.0
+			if gioco() == "palestina":
+				val = 2.0 if t == "citta" else (2.0 if t == "ferrovia" and int(x["sab"]) == 0 else (1.0 if t == "distretto" else 0.0))
+			else:
+				val = float(SP[id].get("valore", 0)) if t in ["citta", "base"] else 0.0
+			if val <= 0.0:
+				continue
+			var bonus := 2 if _vicino_deposito(id) else 0
+			var pol := 0 if cap("C31") != "" else int(x["p"])
+			var ok := 0
+			for d in range(1, 7):
+				if d + bonus - pol > 2:
+					ok += 1
+			minacce.append(val * ok / 6.0)
+		minacce.sort()
+		minacce.reverse()
+		var minaccia := 0.0
+		for i in min(4, minacce.size()):
+			minaccia += float(minacce[i])
+		v -= minaccia * (5.0 if carte_a_prop <= 2 else 3.0)
 		var soglia := pw + stima
 		if soglia <= 0:
 			v -= 400.0 if carte_a_prop <= 2 else 120.0

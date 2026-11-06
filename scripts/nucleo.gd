@@ -215,7 +215,8 @@ func chiedi(f: String, testo: String, opzioni: Array, extra: Dictionary = {}):
 		for o in opzioni:
 			if str(o["v"]) == str(v):
 				return o["v"]
-		push_warning("risposta non valida: %s per %s" % [str(v), testo])
+		if not autorisposta.is_valid():
+			push_warning("risposta non valida: %s per %s" % [str(v), testo])
 		_ans.resize(_i - 1)
 		_i -= 1
 	var q := {"f": f, "testo": testo, "opz": opzioni, "x": extra}

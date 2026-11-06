@@ -153,6 +153,16 @@ func _draw() -> void:
 		var r = max(float(m.SP[id].get("r", 0)) * ts.x * zoom, u * 2.0)
 		draw_arc(c, r, 0, TAU, 48, Color(Tema.GOLD_HI, a), max(3.0, u * 0.18), true)
 		draw_arc(c, r + u * 0.25, 0, TAU, 48, Color(0, 0, 0, a * 0.5), 2.0, true)
+	var scaduti: Array = []
+	for id in ultimo_cambiato:
+		var eta: float = _t - float(ultimo_cambiato[id])
+		if eta > 3.0:
+			scaduti.append(id)
+			continue
+		var al := (1.0 - eta / 3.0) * (0.6 + 0.4 * sin(_t * 8.0))
+		draw_arc(pos_spazio(id), u * 2.2, 0, TAU, 40, Color(1, 1, 1, al), max(2.0, u * 0.14), true)
+	for id in scaduti:
+		ultimo_cambiato.erase(id)
 	for id in selezionati:
 		draw_arc(pos_spazio(id), u * 1.6, 0, TAU, 40, Color("ffffff"), 3.0, true)
 	if sopra != "":

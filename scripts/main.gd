@@ -613,6 +613,10 @@ func _passo() -> void:
 	if fatto:
 		for l in m.registro:
 			registro_fisso.append(_colora(l))
+		var prima: Dictionary = base.get("sp", {})
+		for id in m.ordine:
+			if prima.has(id) and str(prima[id]) != str(m.s["sp"][id]):
+				mappa.ultimo_cambiato[id] = mappa._t
 		var concluso := ans.duplicate()
 		atti.append(concluso)
 		_invia_rete(atti.size() - 1, concluso, true)
