@@ -117,10 +117,7 @@ func ev_P1(f: String, l: String) -> void:
 		op_search("brit", {"max": 1, "limitata": true, "filtro": func(x): return x == c})
 		if ferma():
 			return
-		if int(X(c)["cf"]) > 0 and int(X(c)["t"]) >= 3:
-			detenzione_in(c)
-		elif int(X(c)["cf"]) > 0:
-			detenzione_in(c)
+		detenzione_in(c)
 		sposta_haganah(-1)
 	else:
 		sposta_haganah(1)

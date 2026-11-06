@@ -241,13 +241,15 @@ func si_no(f: String, testo: String, tag: String = "") -> bool:
 	return v == "si"
 
 
-func numero(f: String, testo: String, minn: int, maxn: int, tag: String = "") -> int:
+func numero(f: String, testo: String, minn: int, maxn: int, tag: String = "", extra: Dictionary = {}) -> int:
 	if maxn <= minn:
 		return maxn
 	var ops: Array = []
 	for i in range(minn, maxn + 1):
 		ops.append(o(i, str(i)))
-	var v = chiedi(f, testo, ops, {"tag": tag, "num": true})
+	var x := {"tag": tag, "num": true}
+	x.merge(extra)
+	var v = chiedi(f, testo, ops, x)
 	return 0 if v == null else int(v)
 
 

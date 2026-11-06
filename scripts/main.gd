@@ -57,6 +57,8 @@ var log_lbl: RichTextLabel
 var info_lbl: Label
 var fine_dlg: AcceptDialog
 var carta_pop: PopupPanel
+var regole_pop: AcceptDialog
+var regole_txt: RichTextLabel
 var carta_pop_tex: TextureRect
 var menu_msg: Label
 var nome_edit: LineEdit
@@ -363,6 +365,11 @@ func _costruisci_partita() -> void:
 	btn_annulla.custom_minimum_size = Vector2(96, 44)
 	btn_annulla.pressed.connect(_annulla)
 	th.add_child(btn_annulla)
+	var br := Button.new()
+	br.text = "Regole"
+	br.custom_minimum_size = Vector2(84, 44)
+	br.pressed.connect(_mostra_regole)
+	th.add_child(br)
 	var bs := Button.new()
 	bs.text = "Salva online"
 	bs.custom_minimum_size = Vector2(120, 44)
@@ -485,6 +492,15 @@ func _costruisci_partita() -> void:
 	fine_dlg.ok_button_text = "Torna al menu"
 	fine_dlg.confirmed.connect(_torna_menu)
 	add_child(fine_dlg)
+	regole_pop = AcceptDialog.new()
+	regole_pop.title = "Regole in breve"
+	regole_pop.ok_button_text = "Chiudi"
+	add_child(regole_pop)
+	regole_txt = RichTextLabel.new()
+	regole_txt.bbcode_enabled = true
+	regole_txt.custom_minimum_size = Vector2(900, 620)
+	regole_txt.add_theme_color_override("default_color", Tema.INK)
+	regole_pop.add_child(regole_txt)
 	carta_pop = PopupPanel.new()
 	add_child(carta_pop)
 	carta_pop_tex = TextureRect.new()
@@ -511,7 +527,7 @@ func _titoletto(t: String) -> Label:
 
 func _chip(f: String) -> PanelContainer:
 	var p := PanelContainer.new()
-	p.custom_minimum_size = Vector2(270, 52)
+	p.custom_minimum_size = Vector2(240, 52)
 	p.add_theme_stylebox_override("panel", Tema.box(Tema.FAZ[f].darkened(0.35), Tema.FAZ[f], 2, 3, 6))
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", -2)
@@ -770,6 +786,34 @@ func _tex_carta(cid: String) -> Texture2D:
 	return load(p) if ResourceLoader.exists(p) else null
 
 
+const REGOLE_GIOCO := {
+	"palestina": "Volontà Politica 0–20 (si parte da 18). [b]L'Irgun vince subito[/b] se a una Propaganda la Volontà Politica è 0; altrimenti dopo la terza Propaganda vincono i Britannici.\nPropaganda: −1 per Sabotaggio nei Distretti, −2 per Ferrovia sabotata, −2 per Sabotaggio e −3 per Terrore nelle Città; +2 se nessuna Ferrovia è sabotata, +1 per Città pulita. Poi Espropri (Rapina), Intel (pesca se non ne hai, altrimenti scarti metà), Haganah (0: Intel ai Britannici, 4: Deposito all'Irgun), Ridispiegamento, Reset (metà della Prigione esce, Cellule clandestine, Irgun primo).\nHaganah: a 4 l'Irgun ha uno spazio in più per Operazione; scendendo sotto 4 e 3 ritira pezzi all'Irgun.",
+	"cipro": "Volontà Politica 0–15 (si parte da 14). [b]L'EOKA vince subito[/b] se a una Propaganda la Volontà Politica è 0; altrimenti dopo la terza Propaganda vincono i Britannici.\nPropaganda: −valore dell'Opinione internazionale, −valore dello spazio per ogni Sabotaggio in Città e Basi; +2 se nessun Deposito nei Monti, +1 ogni 2 Città senza Sabotaggio. Poi Armi EOKA, Intel, Ridispiegamento (Truppe dai Monti alle Basi, Cellule fuori dalle Basi), Reset (Opinione −1 se al massimo 3 Città con Sabotaggio o Coprifuoco, metà della Prigione esce, EOKA primo).",
+	"malesia": "Volontà Politica 0–20 (si parte da 12). Vittoria immediata a una Propaganda: MCP con 0–2, Britannici con 18–20; alla fine del mazzo vince l'MCP sotto 10, i Britannici sopra 10.\nIl Controllo conta subito: l'MCP che prende il Controllo di uno spazio toglie VP pari alla Popolazione (e le restituisce perdendolo).\nPropaganda: + Popolazione a Supporto − Popolazione in Opposizione senza Nuovo Villaggio; −1 per Centro economico sabotato e per Terrore a Kuala Lumpur. Poi Risorse, Pacificazione e Agitazione, Ridispiegamento, Reset (cambia il Comandante).",
+	"kenya": "Volontà Politica 0–20 (si parte da 12). Vittoria immediata a una Propaganda: Mau Mau con 0–2, Britannici con 18–20; alla fine del mazzo vincono i Mau Mau sotto 10, i Britannici sopra 10.\nIl Controllo conta subito: i Mau Mau che prendono il Controllo di uno spazio tolgono VP pari alla Popolazione.\nPropaganda: −(Resistenza − Lealtà) se negativa, −1 per Terrore negli spazi popolati non di Riserva; +2 se nessun Mau Mau a Nairobi, +2 se nessuna Base fuori dalle giungle. Poi Risorse, Ricompensa e Giuramento, Ridispiegamento, Campi nella foresta, Reset (la Pipeline può spostarsi).",
+}
+
+
+func _mostra_regole() -> void:
+	if m == null:
+		return
+	var t: Array = []
+	t.append("[font_size=22][b]%s %s[/b][/font_size]" % [GIOCHI[gioco_id]["nome"], GIOCHI[gioco_id]["anni"]])
+	t.append("[b]Sequenza di gioco.[/b] Si scopre una carta alla volta. Il primo idoneo sceglie una casella del tracciato dell'Iniziativa (Operazione Limitata, Evento, Operazione + Attività Speciale) e la esegue o passa; il secondo sceglie una delle caselle libere. Alla carta successiva è primo chi sta nella casella più a sinistra. Chi passa riceve il bonus indicato.")
+	t.append(REGOLE_GIOCO[gioco_id])
+	for f in ["brit", "ins"]:
+		t.append("\n[font_size=19][b]%s: Operazioni[/b][/font_size]" % m.nome_faz(f))
+		for op in m.OPS[gioco_id][f]:
+			t.append("• [b]%s[/b]: %s" % [m.nome_op(op), m.descrizione(op)])
+		t.append("[b]Attività Speciali[/b]")
+		for sa in m.SAS[gioco_id][f]:
+			var acc: Array = m.SAS[gioco_id][f][sa]
+			var con := "" if acc.is_empty() else " (con " + ", ".join(acc.map(func(x): return m.nome_op(x))) + ")"
+			t.append("• [b]%s[/b]%s: %s" % [m.nome_op(sa), con, m.descrizione(sa)])
+	regole_txt.text = "\n".join(t)
+	regole_pop.popup_centered(Vector2(940, 700))
+
+
 func _mostra_carta(cid: String) -> void:
 	if cid == "" or m == null:
 		return
@@ -809,6 +853,7 @@ func _mostra_domanda(chi: String) -> void:
 	for c in box_opz.get_children():
 		c.queue_free()
 	mappa.candidati = []
+	mappa.selezionati = []
 	if m.finita():
 		lbl_chi.text = "Partita conclusa"
 		lbl_domanda.text = m.s["fine"].get("m", "")
@@ -822,6 +867,10 @@ func _mostra_domanda(chi: String) -> void:
 	if chi != "umano":
 		return
 	var opzioni: Array = q["opz"]
+	var qx: Dictionary = q.get("x", {})
+	for k in ["da", "a"]:
+		if qx.has(k):
+			mappa.selezionati.append(qx[k])
 	var spazi: bool = q.get("x", {}).get("spazi", false)
 	var num: bool = q.get("x", {}).get("num", false)
 	var lunghe := false
@@ -829,7 +878,7 @@ func _mostra_domanda(chi: String) -> void:
 		if str(o["t"]).length() > 22:
 			lunghe = true
 	box_opz.columns = 1 if lunghe else (6 if num else 2)
-	if str(q.get("x", {}).get("tag", "")) in ["op", "sa"]:
+	if str(q.get("x", {}).get("tag", "")) in ["op", "sa"] or q.get("x", {}).get("spazi", false):
 		box_opz.columns = 1
 	for o in opzioni:
 		var v = o["v"]
@@ -855,10 +904,25 @@ func _mostra_domanda(chi: String) -> void:
 				dl.add_theme_color_override("font_color", Tema.INK_DIM)
 				box_opz.add_child(dl)
 	if spazi:
-		var h := _lbl_carta("Clicca uno spazio evidenziato sulla mappa (%d possibili)." % mappa.candidati.size(), 16)
+		var h := _lbl_carta("Clicca uno spazio evidenziato sulla mappa, oppure il suo nome qui sotto.", 16)
 		h.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		box_opz.add_child(h)
 		box_opz.move_child(h, 0)
+		var fl := HFlowContainer.new()
+		fl.add_theme_constant_override("h_separation", 4)
+		fl.add_theme_constant_override("v_separation", 4)
+		fl.custom_minimum_size = Vector2(390, 0)
+		for id in mappa.candidati:
+			var sb := Button.new()
+			sb.text = m.nome_sp(id)
+			sb.add_theme_font_size_override("font_size", 15)
+			sb.custom_minimum_size = Vector2(0, 32)
+			Tema.tasto_carta(sb, false, Tema.FAZ[f])
+			sb.pressed.connect(rispondi.bind(id))
+			sb.mouse_entered.connect(func(): mappa.sopra = id; mappa.queue_redraw())
+			fl.add_child(sb)
+		box_opz.add_child(fl)
+		box_opz.move_child(fl, 1)
 	mappa.queue_redraw()
 
 
