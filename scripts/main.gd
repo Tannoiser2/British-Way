@@ -50,7 +50,7 @@ var lbl_domanda: Label
 var box_opz: GridContainer
 var carta_tex: TextureRect
 var lbl_carta: Label
-var iniz_box: HBoxContainer
+var iniz_box: VBoxContainer
 var cap_box: VBoxContainer
 var stato_lbl: RichTextLabel
 var log_lbl: RichTextLabel
@@ -61,6 +61,8 @@ var regole_pop: AcceptDialog
 var regole_txt: RichTextLabel
 var carta_pop_tex: TextureRect
 var menu_msg: Label
+var fine_txt: RichTextLabel
+var _carta_mostrata := ""
 var nome_edit: LineEdit
 var codice_edit: LineEdit
 var sel_gioco_btns: Dictionary = {}
@@ -96,241 +98,264 @@ func _costruisci_menu() -> void:
 	bg.color = Tema.BG
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	menu.add_child(bg)
-	var scroll := ScrollContainer.new()
-	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	menu.add_child(scroll)
-	var centro := CenterContainer.new()
-	centro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	centro.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.add_child(centro)
+	var marg := MarginContainer.new()
+	marg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	for k in ["left", "right"]:
+		marg.add_theme_constant_override("margin_" + k, 28)
+	marg.add_theme_constant_override("margin_top", 10)
+	marg.add_theme_constant_override("margin_bottom", 10)
+	menu.add_child(marg)
 	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 14)
-	col.custom_minimum_size = Vector2(1180, 0)
-	centro.add_child(col)
-	var stemma := TextureRect.new()
-	col.add_child(_spazio(10))
+	col.add_theme_constant_override("separation", 8)
+	marg.add_child(col)
+	# --- titolo
+	var tit := HBoxContainer.new()
+	tit.alignment = BoxContainer.ALIGNMENT_CENTER
+	tit.add_theme_constant_override("separation", 18)
+	col.add_child(tit)
 	var t := Label.new()
 	t.text = "THE BRITISH WAY"
 	t.add_theme_font_override("font", Tema.titolo())
-	t.add_theme_font_size_override("font_size", 64)
+	t.add_theme_font_size_override("font_size", 50)
 	t.add_theme_color_override("font_color", Tema.PAPER)
-	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(t)
+	tit.add_child(t)
 	var st := Label.new()
-	st.text = "Controinsurrezione alla fine dell'Impero · quattro giochi COIN per due giocatori"
+	st.text = "Controinsurrezione alla fine dell'Impero\nquattro giochi COIN per due giocatori"
 	st.add_theme_font_override("font", Tema.serif_it())
-	st.add_theme_font_size_override("font_size", 24)
+	st.add_theme_font_size_override("font_size", 20)
 	st.add_theme_color_override("font_color", Tema.GOLD)
-	st.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(st)
-	col.add_child(_spazio(6))
+	tit.add_child(st)
+	# --- i quattro giochi
 	var riga := HBoxContainer.new()
-	riga.add_theme_constant_override("separation", 14)
-	riga.alignment = BoxContainer.ALIGNMENT_CENTER
+	riga.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	riga.add_theme_constant_override("separation", 12)
 	col.add_child(riga)
 	for g in ["palestina", "malesia", "kenya", "cipro"]:
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(280, 350)
+		b.custom_minimum_size = Vector2(0, 250)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.toggle_mode = true
 		b.add_theme_stylebox_override("normal", Tema.box(Color("16243a"), Color("33496d"), 1, 4))
 		b.add_theme_stylebox_override("hover", Tema.box(Color("1d2f4b"), Tema.GOLD, 2, 4))
 		b.add_theme_stylebox_override("pressed", Tema.box(Color("22385c"), Tema.GOLD_HI, 3, 4))
 		var v := VBoxContainer.new()
 		v.set_anchors_preset(Control.PRESET_FULL_RECT)
-		v.offset_left = 10
-		v.offset_right = -10
-		v.offset_top = 10
-		v.offset_bottom = -10
+		v.offset_left = 8
+		v.offset_right = -8
+		v.offset_top = 8
+		v.offset_bottom = -8
+		v.add_theme_constant_override("separation", 2)
 		v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(v)
 		var img := TextureRect.new()
 		img.texture = load("res://assets/mappe/%s.webp" % g)
 		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		img.custom_minimum_size = Vector2(0, 200)
+		img.custom_minimum_size = Vector2(0, 120)
+		img.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		img.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		img.clip_contents = true
 		v.add_child(img)
 		var n := Label.new()
 		n.text = GIOCHI[g]["nome"]
 		n.add_theme_font_override("font", Tema.titolo())
-		n.add_theme_font_size_override("font_size", 30)
+		n.add_theme_font_size_override("font_size", 26)
 		n.add_theme_color_override("font_color", Tema.PAPER)
 		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		v.add_child(n)
-		var a := Label.new()
-		a.text = "%s · Britannici contro %s" % [GIOCHI[g]["anni"], GIOCHI[g]["ins"]]
-		a.add_theme_color_override("font_color", Tema.GOLD)
-		a.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		v.add_child(a)
+		var a2 := Label.new()
+		a2.text = "%s · Britannici contro %s" % [GIOCHI[g]["anni"], GIOCHI[g]["ins"]]
+		a2.add_theme_color_override("font_color", Tema.GOLD)
+		a2.add_theme_font_size_override("font_size", 16)
+		a2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		v.add_child(a2)
 		var d := Label.new()
 		d.text = GIOCHI[g]["desc"]
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		d.add_theme_color_override("font_color", Tema.TEXT_DIM)
-		d.add_theme_font_size_override("font_size", 15)
+		d.add_theme_font_size_override("font_size", 14)
 		d.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		v.add_child(d)
 		b.pressed.connect(_seleziona_gioco.bind(g))
 		riga.add_child(b)
 		sel_gioco_btns[g] = b
-	col.add_child(_spazio(4))
+	# --- due colonne: partita singola | campagna
+	var cols := HBoxContainer.new()
+	cols.add_theme_constant_override("separation", 12)
+	col.add_child(cols)
 	var pan := PanelContainer.new()
-	col.add_child(pan)
+	pan.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pan.add_theme_stylebox_override("panel", Tema.carta(10))
+	cols.add_child(pan)
 	var pv := VBoxContainer.new()
-	pv.add_theme_constant_override("separation", 10)
+	pv.add_theme_constant_override("separation", 6)
 	pan.add_child(pv)
-	var h1 := _lbl_carta("Partita locale", 26, true)
-	pv.add_child(h1)
-	var r1 := HBoxContainer.new()
-	r1.add_theme_constant_override("separation", 10)
-	pv.add_child(r1)
-	for k in [["brit", "Gioca con i Britannici contro l'IA"], ["ins", "Gioca con gli insorti contro l'IA"], ["hotseat", "Due giocatori sullo stesso schermo"], ["demo", "IA contro IA (dimostrazione)"]]:
+	pv.add_child(_lbl_carta("Partita singola (gioco selezionato sopra)", 22, true))
+	var g1 := GridContainer.new()
+	g1.columns = 2
+	g1.add_theme_constant_override("h_separation", 6)
+	g1.add_theme_constant_override("v_separation", 6)
+	pv.add_child(g1)
+	for k in [["brit", "Io Britannici contro l'IA"], ["ins", "Io insorti contro l'IA"], ["hotseat", "Due giocatori, stesso schermo"], ["demo", "IA contro IA (dimostrazione)"]]:
 		var b := Button.new()
 		b.text = k[1]
-		b.custom_minimum_size = Vector2(0, 46)
+		b.custom_minimum_size = Vector2(0, 38)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		Tema.tasto_carta(b, k[0] in ["brit", "ins"], Tema.NAVY if k[0] == "brit" else Tema.RED)
 		b.pressed.connect(_nuova_locale.bind(k[0]))
-		r1.add_child(b)
+		g1.add_child(b)
 		if k[0] == "ins":
 			b.set_meta("ins_btn", true)
-	var r2 := HBoxContainer.new()
-	r2.add_theme_constant_override("separation", 10)
-	pv.add_child(r2)
 	var bl := Button.new()
-	bl.text = "Riprendi la partita salvata su questo dispositivo"
 	bl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	bl.custom_minimum_size = Vector2(0, 40)
+	bl.custom_minimum_size = Vector2(0, 34)
 	Tema.tasto_carta(bl)
 	bl.pressed.connect(_riprendi_locale)
 	bl.set_meta("riprendi", "locale")
-	r2.add_child(bl)
+	g1.add_child(bl)
 	var bc := Button.new()
-	bc.text = "Riprendi dal salvataggio online (Firebase)"
 	bc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	bc.custom_minimum_size = Vector2(0, 40)
+	bc.custom_minimum_size = Vector2(0, 34)
 	Tema.tasto_carta(bc)
 	bc.pressed.connect(_riprendi_cloud)
 	bc.set_meta("riprendi", "cloud")
-	r2.add_child(bc)
+	g1.add_child(bc)
 	var lunga := CheckBox.new()
 	lunga.text = "Malesia: scenario esteso (mazzo di 27 carte)"
-	lunga.add_theme_color_override("font_color", Tema.INK)
+	_stile_check(lunga)
 	lunga.toggled.connect(func(v): opz["lungo"] = v)
-	for sty in ["normal", "hover", "pressed", "hover_pressed", "focus"]:
-		lunga.add_theme_stylebox_override(sty, StyleBoxEmpty.new())
-	lunga.add_theme_color_override("font_hover_color", Tema.NAVY)
-	lunga.add_theme_color_override("font_pressed_color", Tema.INK)
 	pv.add_child(lunga)
-	pv.add_child(_lbl_carta("Campagna «End of Empire»: le quattro partite in fila", 26, true))
-	var cd := _lbl_carta("Palestina, Malesia, Kenya e Cipro una dopo l'altra: il Prestigio imperiale (si parte da 13) sale o scende con l'esito di ogni partita e con gli eventi di campagna; dopo la prima Propaganda i Britannici scelgono la Politica coloniale. Alla fine di Cipro: 11-15 Ritirata ordinata (vittoria britannica), 5-10 Vento del cambiamento, 0-4 Fuga dalle colonie (vittoria degli insorti).", 15)
-	cd.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	cd.add_theme_color_override("font_color", Tema.INK_DIM)
-	pv.add_child(cd)
-	var rc := HBoxContainer.new()
-	rc.add_theme_constant_override("separation", 10)
-	pv.add_child(rc)
-	for k in [["brit", "Nuova campagna: io Britannici contro l'IA"], ["ins", "Nuova campagna: io insorti contro l'IA"], ["hotseat", "Nuova campagna in due"]]:
-		var b := Button.new()
-		b.text = k[1]
-		b.custom_minimum_size = Vector2(0, 44)
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		Tema.tasto_carta(b, k[0] != "hotseat", Tema.NAVY if k[0] == "brit" else Tema.RED)
-		b.pressed.connect(_nuova_campagna.bind(k[0]))
-		rc.add_child(b)
-	var rc2 := HBoxContainer.new()
-	rc2.add_theme_constant_override("separation", 10)
-	pv.add_child(rc2)
-	var pw := CheckBox.new()
-	pw.text = "Tabelle pre-belliche (tiro casuale)"
-	pw.button_pressed = true
-	pw.add_theme_color_override("font_color", Tema.INK)
-	for sty in ["normal", "hover", "pressed", "hover_pressed", "focus"]:
-		pw.add_theme_stylebox_override(sty, StyleBoxEmpty.new())
-	pw.add_theme_color_override("font_hover_color", Tema.NAVY)
-	pw.add_theme_color_override("font_pressed_color", Tema.INK)
-	pw.toggled.connect(func(v): camp_prewar = v)
-	rc2.add_child(pw)
-	var bcl := Button.new()
-	bcl.text = "Riprendi la campagna"
-	bcl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	bcl.custom_minimum_size = Vector2(0, 40)
-	Tema.tasto_carta(bcl)
-	bcl.pressed.connect(_riprendi_campagna.bind(false))
-	rc2.add_child(bcl)
-	var bcc := Button.new()
-	bcc.text = "Riprendi la campagna salvata online"
-	bcc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	bcc.custom_minimum_size = Vector2(0, 40)
-	Tema.tasto_carta(bcc)
-	bcc.pressed.connect(_riprendi_campagna.bind(true))
-	rc2.add_child(bcc)
-	var rc3 := HBoxContainer.new()
-	rc3.add_theme_constant_override("separation", 10)
-	pv.add_child(rc3)
-	var lc := _lbl_carta("Riprendi da un altro dispositivo con il codice della campagna:", 16)
-	rc3.add_child(lc)
-	camp_codice_edit = LineEdit.new()
-	camp_codice_edit.placeholder_text = "Codice"
-	camp_codice_edit.max_length = 6
-	camp_codice_edit.custom_minimum_size = Vector2(130, 40)
-	camp_codice_edit.add_theme_color_override("font_placeholder_color", Tema.INK_FAINT)
-	rc3.add_child(camp_codice_edit)
-	var bcod := Button.new()
-	bcod.text = "Riprendi con codice"
-	bcod.custom_minimum_size = Vector2(170, 40)
-	Tema.tasto_carta(bcod, true)
-	bcod.pressed.connect(_riprendi_campagna_codice)
-	rc3.add_child(bcod)
-	camp_lbl = _lbl_carta("", 15)
-	camp_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	pv.add_child(camp_lbl)
-	pv.add_child(_lbl_carta("Partita online", 26, true))
+	pv.add_child(_lbl_carta("Online", 22, true))
 	var r3 := HBoxContainer.new()
-	r3.add_theme_constant_override("separation", 10)
+	r3.add_theme_constant_override("separation", 6)
 	pv.add_child(r3)
 	nome_edit = LineEdit.new()
 	nome_edit.placeholder_text = "Il tuo nome"
 	nome_edit.text = "Stefano"
-	nome_edit.custom_minimum_size = Vector2(220, 42)
+	nome_edit.custom_minimum_size = Vector2(130, 36)
 	nome_edit.add_theme_color_override("font_placeholder_color", Tema.INK_FAINT)
 	r3.add_child(nome_edit)
-	for k in [["brit", "Crea stanza: io Britannici"], ["ins", "Crea stanza: io insorti"]]:
+	for k in [["brit", "Crea: io Britannici"], ["ins", "Crea: io insorti"]]:
 		var b := Button.new()
 		b.text = k[1]
-		b.custom_minimum_size = Vector2(0, 42)
+		b.custom_minimum_size = Vector2(0, 36)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		Tema.tasto_carta(b)
 		b.pressed.connect(_crea_stanza.bind(k[0]))
 		r3.add_child(b)
+	var r4 := HBoxContainer.new()
+	r4.add_theme_constant_override("separation", 6)
+	pv.add_child(r4)
 	codice_edit = LineEdit.new()
-	codice_edit.placeholder_text = "Codice"
+	codice_edit.placeholder_text = "Codice stanza"
 	codice_edit.max_length = 4
-	codice_edit.custom_minimum_size = Vector2(110, 42)
+	codice_edit.custom_minimum_size = Vector2(130, 36)
 	codice_edit.add_theme_color_override("font_placeholder_color", Tema.INK_FAINT)
-	r3.add_child(codice_edit)
+	r4.add_child(codice_edit)
 	var be := Button.new()
-	be.text = "Entra"
-	be.custom_minimum_size = Vector2(110, 42)
+	be.text = "Entra nella stanza"
+	be.custom_minimum_size = Vector2(0, 36)
+	be.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	Tema.tasto_carta(be, true)
 	be.pressed.connect(_entra_stanza)
-	r3.add_child(be)
+	r4.add_child(be)
 	var br2 := Button.new()
-	br2.text = "Rientra nell'ultima stanza online"
-	br2.custom_minimum_size = Vector2(0, 40)
+	br2.text = "Rientra nell'ultima stanza"
+	br2.custom_minimum_size = Vector2(0, 36)
+	br2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	Tema.tasto_carta(br2)
 	br2.pressed.connect(_rientra_stanza)
-	pv.add_child(br2)
-	menu_msg = _lbl_carta("", 18)
+	r4.add_child(br2)
+	# --- campagna
+	var pan2 := PanelContainer.new()
+	pan2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pan2.add_theme_stylebox_override("panel", Tema.carta(10))
+	cols.add_child(pan2)
+	var cv := VBoxContainer.new()
+	cv.add_theme_constant_override("separation", 6)
+	pan2.add_child(cv)
+	cv.add_child(_lbl_carta("Campagna «End of Empire»", 22, true))
+	var cd := _lbl_carta("Le quattro partite in fila (Palestina, Malesia, Kenya, Cipro) con Prestigio imperiale (da 13), Politica coloniale ed eventi di campagna. Alla fine: 11-15 Ritirata ordinata, 5-10 Vento del cambiamento, 0-4 Fuga dalle colonie.", 14)
+	cd.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	cd.add_theme_color_override("font_color", Tema.INK_DIM)
+	cd.custom_minimum_size = Vector2(300, 0)
+	cv.add_child(cd)
+	var g2 := GridContainer.new()
+	g2.columns = 2
+	g2.add_theme_constant_override("h_separation", 6)
+	g2.add_theme_constant_override("v_separation", 6)
+	cv.add_child(g2)
+	for k in [["brit", "Io Britannici contro l'IA"], ["ins", "Io insorti contro l'IA"], ["hotseat", "Due giocatori, stesso schermo"], ["demo", "IA contro IA (dimostrazione)"]]:
+		var b := Button.new()
+		b.text = k[1]
+		b.custom_minimum_size = Vector2(0, 38)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		Tema.tasto_carta(b, k[0] in ["brit", "ins"], Tema.NAVY if k[0] == "brit" else Tema.RED)
+		b.pressed.connect(_nuova_campagna.bind(k[0]))
+		g2.add_child(b)
+	var bcl := Button.new()
+	bcl.text = "Riprendi la campagna"
+	bcl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bcl.custom_minimum_size = Vector2(0, 34)
+	Tema.tasto_carta(bcl)
+	bcl.pressed.connect(_riprendi_campagna.bind(false))
+	g2.add_child(bcl)
+	var bcc := Button.new()
+	bcc.text = "Riprendi da Firebase"
+	bcc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bcc.custom_minimum_size = Vector2(0, 34)
+	Tema.tasto_carta(bcc)
+	bcc.pressed.connect(_riprendi_campagna.bind(true))
+	g2.add_child(bcc)
+	var pw := CheckBox.new()
+	pw.text = "Tabelle pre-belliche (tiro casuale)"
+	pw.button_pressed = true
+	_stile_check(pw)
+	pw.toggled.connect(func(v): camp_prewar = v)
+	cv.add_child(pw)
+	var rc3 := HBoxContainer.new()
+	rc3.add_theme_constant_override("separation", 6)
+	cv.add_child(rc3)
+	camp_codice_edit = LineEdit.new()
+	camp_codice_edit.placeholder_text = "Codice campagna"
+	camp_codice_edit.max_length = 6
+	camp_codice_edit.custom_minimum_size = Vector2(170, 36)
+	camp_codice_edit.add_theme_color_override("font_placeholder_color", Tema.INK_FAINT)
+	rc3.add_child(camp_codice_edit)
+	var bcod := Button.new()
+	bcod.text = "Riprendi con codice (altro dispositivo)"
+	bcod.custom_minimum_size = Vector2(0, 36)
+	bcod.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	Tema.tasto_carta(bcod, true)
+	bcod.pressed.connect(_riprendi_campagna_codice)
+	rc3.add_child(bcod)
+	camp_lbl = _lbl_carta("", 14)
+	camp_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	camp_lbl.custom_minimum_size = Vector2(300, 0)
+	cv.add_child(camp_lbl)
+	# --- messaggi e crediti
+	menu_msg = Label.new()
+	menu_msg.add_theme_color_override("font_color", Tema.GOLD_HI)
+	menu_msg.add_theme_font_size_override("font_size", 17)
 	menu_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	pv.add_child(menu_msg)
+	menu_msg.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	col.add_child(menu_msg)
 	var cred := Label.new()
 	cred.text = "Gioco originale di Stephen Rangazas, GMT Games (2023). Versione digitale per uso personale."
 	cred.add_theme_color_override("font_color", Tema.TEXT_DIM)
-	cred.add_theme_font_size_override("font_size", 14)
+	cred.add_theme_font_size_override("font_size", 13)
 	cred.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col.add_child(cred)
+
+
+func _stile_check(c: CheckBox) -> void:
+	c.add_theme_color_override("font_color", Tema.INK)
+	c.add_theme_color_override("font_hover_color", Tema.NAVY)
+	c.add_theme_color_override("font_pressed_color", Tema.INK)
+	c.add_theme_color_override("font_hover_pressed_color", Tema.NAVY)
+	c.add_theme_font_size_override("font_size", 16)
+	for sty in ["normal", "hover", "pressed", "hover_pressed", "focus"]:
+		c.add_theme_stylebox_override(sty, StyleBoxEmpty.new())
 
 
 func _spazio(h: int) -> Control:
@@ -361,12 +386,12 @@ func _aggiorna_tasti_menu() -> void:
 		if b.has_meta("riprendi"):
 			var nome: String = GIOCHI[gioco_id]["nome"]
 			if b.get_meta("riprendi") == "locale":
-				b.text = "Riprendi %s salvata su questo dispositivo%s" % [nome, "" if FileAccess.file_exists(_file_salva(gioco_id)) else " (nessuna)"]
+				b.text = "Riprendi %s (questo dispositivo)%s" % [nome, "" if FileAccess.file_exists(_file_salva(gioco_id)) else " (nessuna)"]
 				b.disabled = not FileAccess.file_exists(_file_salva(gioco_id))
 			else:
-				b.text = "Riprendi %s dal salvataggio online (Firebase)" % nome
+				b.text = "Riprendi %s (Firebase)" % nome
 		if b.has_meta("ins_btn"):
-			b.text = "Gioca con %s contro l'IA" % ("l'" + GIOCHI[gioco_id]["ins"] if GIOCHI[gioco_id]["ins"] in ["Irgun", "EOKA", "MCP"] else "i " + GIOCHI[gioco_id]["ins"])
+			b.text = "Io %s contro l'IA" % GIOCHI[gioco_id]["ins"]
 
 
 func _controllo_da_modo(modo: String) -> Dictionary:
@@ -535,15 +560,21 @@ func _costruisci_partita() -> void:
 	var dx := PanelContainer.new()
 	dx.custom_minimum_size = Vector2(430, 0)
 	corpo.add_child(dx)
-	var sc := ScrollContainer.new()
-	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	dx.add_child(sc)
 	pannello = VBoxContainer.new()
 	pannello.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pannello.add_theme_constant_override("separation", 8)
-	sc.add_child(pannello)
+	dx.add_child(pannello)
+	# riquadro della domanda: occupa lo spazio che resta e scorre al suo interno
+	var sc := ScrollContainer.new()
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	pannello.add_child(sc)
+	var dom := VBoxContainer.new()
+	dom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	dom.add_theme_constant_override("separation", 8)
+	sc.add_child(dom)
 	banner = PanelContainer.new()
-	pannello.add_child(banner)
+	dom.add_child(banner)
 	var bv := VBoxContainer.new()
 	banner.add_child(bv)
 	lbl_chi = Label.new()
@@ -556,39 +587,69 @@ func _costruisci_partita() -> void:
 	lbl_domanda.add_theme_font_override("font", Tema.ui_med())
 	lbl_domanda.add_theme_font_size_override("font_size", 19)
 	lbl_domanda.add_theme_color_override("font_color", Color.WHITE)
-	lbl_domanda.custom_minimum_size = Vector2(380, 0)
+	lbl_domanda.custom_minimum_size = Vector2(370, 0)
 	bv.add_child(lbl_domanda)
 	box_opz = GridContainer.new()
 	box_opz.columns = 1
+	box_opz.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box_opz.add_theme_constant_override("h_separation", 6)
 	box_opz.add_theme_constant_override("v_separation", 6)
-	pannello.add_child(box_opz)
-	pannello.add_child(_titoletto("Iniziativa"))
-	iniz_box = HBoxContainer.new()
-	iniz_box.add_theme_constant_override("separation", 4)
-	pannello.add_child(iniz_box)
-	pannello.add_child(_titoletto("Carta in gioco"))
+	dom.add_child(box_opz)
+	# blocco fisso in basso: carta a sinistra, Iniziativa e Capacità a destra
+	var sep := HSeparator.new()
+	pannello.add_child(sep)
+	var fisso := HBoxContainer.new()
+	fisso.custom_minimum_size = Vector2(0, 300)
+	fisso.add_theme_constant_override("separation", 10)
+	pannello.add_child(fisso)
+	var cc := VBoxContainer.new()
+	cc.add_theme_constant_override("separation", 2)
+	fisso.add_child(cc)
+	cc.add_child(_titoletto("Carta in gioco"))
 	carta_tex = TextureRect.new()
 	carta_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	carta_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	carta_tex.custom_minimum_size = Vector2(380, 330)
+	carta_tex.custom_minimum_size = Vector2(190, 266)
 	carta_tex.mouse_filter = Control.MOUSE_FILTER_STOP
 	carta_tex.tooltip_text = "Clicca per ingrandire"
-	carta_tex.gui_input.connect(func(e): if e is InputEventMouseButton and e.pressed: _mostra_carta(m.s["carta"] if m else ""))
-	pannello.add_child(carta_tex)
+	carta_tex.gui_input.connect(func(e): if e is InputEventMouseButton and e.pressed: _mostra_carta(_carta_mostrata))
+	cc.add_child(carta_tex)
+	var dxv := VBoxContainer.new()
+	dxv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	dxv.add_theme_constant_override("separation", 3)
+	fisso.add_child(dxv)
+	dxv.add_child(_titoletto("Iniziativa"))
+	iniz_box = VBoxContainer.new()
+	iniz_box.add_theme_constant_override("separation", 3)
+	dxv.add_child(iniz_box)
 	lbl_carta = _lbl_carta("", 15)
 	lbl_carta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl_carta.custom_minimum_size = Vector2(380, 0)
-	pannello.add_child(lbl_carta)
-	pannello.add_child(_titoletto("Capacità in gioco"))
+	dxv.add_child(lbl_carta)
+	dxv.add_child(_titoletto("Capacità"))
+	var csc := ScrollContainer.new()
+	csc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	csc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	dxv.add_child(csc)
 	cap_box = VBoxContainer.new()
-	pannello.add_child(cap_box)
+	cap_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	csc.add_child(cap_box)
 	# finestre
 	fine_dlg = AcceptDialog.new()
 	fine_dlg.title = "Fine della partita"
 	fine_dlg.ok_button_text = "Torna al menu"
 	fine_dlg.confirmed.connect(_ok_fine)
 	add_child(fine_dlg)
+	fine_txt = RichTextLabel.new()
+	fine_txt.bbcode_enabled = true
+	fine_txt.fit_content = false
+	fine_txt.scroll_active = true
+	fine_txt.custom_minimum_size = Vector2(640, 440)
+	fine_txt.add_theme_color_override("default_color", Tema.INK)
+	fine_txt.add_theme_font_override("normal_font", Tema.serif())
+	fine_txt.add_theme_font_override("bold_font", Tema.titolo())
+	fine_txt.add_theme_font_size_override("normal_font_size", 18)
+	fine_txt.add_theme_font_size_override("bold_font_size", 26)
+	fine_dlg.add_child(fine_txt)
 	regole_pop = AcceptDialog.new()
 	regole_pop.title = "Regole in breve"
 	regole_pop.ok_button_text = "Chiudi"
@@ -836,6 +897,7 @@ func _aggiorna_ui() -> void:
 	if m.in_campagna() and at.get("t", "") == "camp" and at.get("passo", "") in ["evento", "inizio"] and s["camp"].has("ultimo"):
 		cid = s["camp"]["ultimo"]
 	carta_tex.texture = _tex_carta(cid)
+	_carta_mostrata = cid
 	var cd := m.carta_dati(cid)
 	lbl_carta.text = "1° idoneo: %s" % m.nome_faz(s["primo"])
 	# capacità
@@ -849,9 +911,12 @@ func _aggiorna_ui() -> void:
 		var lato: String = s["cap"][k]
 		b.text = "%s %s · %s" % [k, cc.get("titolo", ""), "doppia" if lato == "d" else ("chiaro: " + str(cc.get("sott_u", ""))) if lato == "u" else ("ombreggiato: " + str(cc.get("sott_s", "")))]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.clip_text = true
-		b.custom_minimum_size = Vector2(380, 32)
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		b.custom_minimum_size = Vector2(150, 30)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.tooltip_text = "Clicca per vedere la carta"
 		Tema.tasto_carta(b)
+		b.add_theme_font_size_override("font_size", 15)
 		b.pressed.connect(_mostra_carta.bind(k))
 		cap_box.add_child(b)
 	# stato
@@ -1098,15 +1163,45 @@ func _fine() -> void:
 	var fine: Dictionary = m.s["fine"]
 	var v: String = fine.get("v", "")
 	var chi := "Vittoria britannica" if v == "brit" else ("Vittoria " + m.nome_faz("ins") if v == "ins" else "Pareggio")
-	fine_dlg.dialog_text = "%s\n\n%s\n\nVolontà Politica finale: %d" % [chi, fine.get("m", ""), int(m.s["pw"])]
+	var col := Tema.NAVY if v == "brit" else (Tema.RED if v == "ins" else Tema.INK)
+	var t := "[center][b][color=#%s]%s[/color][/b][/center]\n" % [col.to_html(false), chi]
+	t += "[center][i]%s[/i][/center]\n\n" % str(fine.get("m", ""))
+	t += "[b]Situazione finale[/b]\n"
+	t += "Volontà Politica britannica: %d (scala 0-%d)\n" % [int(m.s["pw"]), int(m.s["pw_max"])]
+	t += "Carte Propaganda risolte: %d di %d\n" % [int(m.s["prop_fatte"]), int(m.s["prop_tot"])]
+	t += "Carte giocate: %d\n" % (m.s["giocate"] as Array).size()
+	if m.cellule():
+		t += "\nCondizioni: vince l'insorto se la Volontà Politica scende a 0; il Britannico se supera l'ultima Propaganda.\n"
+	else:
+		t += "\nCondizioni: il Britannico vince con Volontà Politica 18 o più, l'insorto con 2 o meno; a fine mazzo decide il confronto con 10.\n"
+	# calcolo dell'ultima Propaganda, preso dal registro
+	var reg: Array = []
+	var rx := RegEx.create_from_string("\\[[^\\]]*\\]")
+	for l in registro_fisso:
+		reg.append(rx.sub(str(l), "", true))
+	var da := -1
+	for i in range(reg.size() - 1, -1, -1):
+		if str(reg[i]).begins_with("— Carta Propaganda"):
+			da = i
+			break
+	if da >= 0:
+		t += "\n[b]Ultima Propaganda[/b]\n"
+		for i in range(da + 1, reg.size()):
+			var r := str(reg[i]).strip_edges()
+			if r == "" or r.begins_with("FINE PARTITA"):
+				continue
+			t += "• " + r + "\n"
 	fine_dlg.ok_button_text = "Torna al menu"
 	if not campagna.is_empty() and m.in_campagna():
-		fine_dlg.dialog_text += "\n\n" + _fine_campagna()
+		t += "\n[b]Campagna[/b]\n" + _fine_campagna()
 		if int(campagna["indice"]) < 4:
 			fine_dlg.ok_button_text = "Prossima partita: " + GIOCHI[Campagna.ORDINE[int(campagna["indice"])]]["nome"]
 	else:
 		_cancella_locale()
-	fine_dlg.popup_centered(Vector2(560, 320))
+	fine_dlg.dialog_text = ""
+	fine_txt.text = t
+	fine_txt.scroll_to_line(0)
+	fine_dlg.popup_centered(Vector2(680, 560))
 
 
 func _torna_menu() -> void:

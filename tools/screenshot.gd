@@ -13,6 +13,11 @@ func _init() -> void:
 	var n := int(a[2])
 	for i in n:
 		await process_frame
+	if a.size() > 4 and a[4] == "fine":
+		scena.m.fine_partita("brit", "Volontà Politica a 18: vittoria britannica!")
+		scena._fine()
+		for i in 5:
+			await process_frame
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png(a[3])
 	print("salvato ", a[3])
