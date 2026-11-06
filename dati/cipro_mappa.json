@@ -1,0 +1,210 @@
+{
+ "spazi": [
+  {
+   "id": "kyrenia",
+   "nome": "Monti di Kyrenia",
+   "tipo": "montagna",
+   "x": 0.5,
+   "y": 0.33702677746999077,
+   "adj": [
+    "nicosia",
+    "famagosta",
+    "karpas",
+    "troodos"
+   ],
+   "r": 0.0,
+   "valore": 0
+  },
+  {
+   "id": "karpas",
+   "nome": "Karpas",
+   "tipo": "citta",
+   "x": 0.7928571428571428,
+   "y": 0.2770083102493075,
+   "adj": [
+    "famagosta",
+    "kyrenia"
+   ],
+   "r": 0.0,
+   "valore": 1
+  },
+  {
+   "id": "famagosta",
+   "nome": "Famagosta",
+   "tipo": "citta",
+   "x": 0.6285714285714286,
+   "y": 0.4801477377654663,
+   "adj": [
+    "karpas",
+    "nicosia",
+    "larnaca",
+    "kyrenia",
+    "troodos",
+    "dhekelia"
+   ],
+   "r": 0.0,
+   "valore": 1
+  },
+  {
+   "id": "nicosia",
+   "nome": "Nicosia",
+   "tipo": "citta",
+   "x": 0.4642857142857143,
+   "y": 0.4709141274238227,
+   "adj": [
+    "kyrenia",
+    "troodos",
+    "famagosta"
+   ],
+   "r": 0.0,
+   "valore": 2
+  },
+  {
+   "id": "troodos",
+   "nome": "Monti Troodos",
+   "tipo": "montagna",
+   "x": 0.3357142857142857,
+   "y": 0.5724838411819021,
+   "adj": [
+    "kyrenia",
+    "nicosia",
+    "famagosta",
+    "paphos",
+    "limassol",
+    "larnaca"
+   ],
+   "r": 0.0,
+   "valore": 0
+  },
+  {
+   "id": "paphos",
+   "nome": "Paphos",
+   "tipo": "citta",
+   "x": 0.12857142857142856,
+   "y": 0.6463527239150508,
+   "adj": [
+    "troodos",
+    "limassol"
+   ],
+   "r": 0.0,
+   "valore": 1
+  },
+  {
+   "id": "limassol",
+   "nome": "Limassol",
+   "tipo": "citta",
+   "x": 0.30714285714285716,
+   "y": 0.6879039704524469,
+   "adj": [
+    "paphos",
+    "troodos",
+    "larnaca",
+    "akrotiri"
+   ],
+   "r": 0.0,
+   "valore": 1
+  },
+  {
+   "id": "larnaca",
+   "nome": "Larnaca",
+   "tipo": "citta",
+   "x": 0.4928571428571429,
+   "y": 0.6602031394275162,
+   "adj": [
+    "limassol",
+    "troodos",
+    "famagosta",
+    "dhekelia"
+   ],
+   "r": 0.0,
+   "valore": 1
+  },
+  {
+   "id": "dhekelia",
+   "nome": "Dhekelia",
+   "tipo": "base",
+   "x": 0.6342857142857142,
+   "y": 0.5650969529085873,
+   "adj": [
+    "larnaca",
+    "famagosta"
+   ],
+   "r": 0.05,
+   "valore": 2
+  },
+  {
+   "id": "akrotiri",
+   "nome": "Akrotiri",
+   "tipo": "base",
+   "x": 0.325,
+   "y": 0.7996306555863343,
+   "adj": [
+    "limassol"
+   ],
+   "r": 0.05,
+   "valore": 2
+  }
+ ],
+ "pw_track": {
+  "x0": 0.05857142857142857,
+  "y0": 0.9261311172668514,
+  "dx": 0.045142857142857144,
+  "dy": 0,
+  "max": 15
+ },
+ "prigione": {
+  "x": 0.8842857142857142,
+  "y": 0.6509695290858726
+ },
+ "setup": {
+  "pw": 14,
+  "opinione": 2,
+  "primo": "ins",
+  "disp": {
+   "t": 0,
+   "p": 3,
+   "g": 6,
+   "b": 3
+  },
+  "spazi": {
+   "paphos": {
+    "g": 1
+   },
+   "limassol": {
+    "g": 1,
+    "t": 2
+   },
+   "nicosia": {
+    "g": 1,
+    "t": 2,
+    "p": 1
+   },
+   "larnaca": {
+    "g": 1,
+    "t": 2,
+    "p": 1
+   },
+   "famagosta": {
+    "g": 1,
+    "p": 1
+   },
+   "troodos": {
+    "g": 1,
+    "b": 1
+   },
+   "akrotiri": {
+    "t": 3
+   },
+   "dhekelia": {
+    "t": 3
+   }
+  }
+ },
+ "pezzi": {
+  "t": 12,
+  "p": 6,
+  "g": 12,
+  "b": 4
+ },
+ "coprifuoco": 4
+}

@@ -1,0 +1,303 @@
+{
+ "carte": [
+  {
+   "id": "M1",
+   "titolo": "Nuovi Villaggi",
+   "cap": "brit",
+   "sott_u": "Controllo severo:",
+   "testo_u": "Il Reinsediamento porta gli spazi in Opposizione a Neutrale.",
+   "sott_s": "Trasferimento risentito:",
+   "testo_s": "L'MCP può fare Raduno negli spazi con Nuovo Villaggio se lì c'è Opposizione."
+  },
+  {
+   "id": "M2",
+   "titolo": "Min Yuen",
+   "cap": "ins",
+   "sott_u": "Individuati e catturati:",
+   "testo_u": "L'Assalto può rimuovere per prime le Basi in 1 spazio scelto.",
+   "sott_s": "Base di sostegno:",
+   "testo_s": "L'Estorsione negli spazi a Controllo MCP dà Risorse pari alla Popolazione."
+  },
+  {
+   "id": "M3",
+   "titolo": "Volantini",
+   "cap": "",
+   "sott_u": "Indurre alla resa:",
+   "testo_u": "Rimuovi 1 Guerriglia ciascuno da 2 spazi di Giungla, oppure 2 Guerriglie da 1 spazio di Montagna.",
+   "sott_s": "Pochi risultati:",
+   "testo_s": "In 1 spazio con pezzi MCP, piazza 2 Guerriglie oppure 1 Base."
+  },
+  {
+   "id": "M4",
+   "titolo": "Abusivi cinesi",
+   "cap": "",
+   "sott_u": "Da trasferire:",
+   "testo_u": "Piazza un Nuovo Villaggio in 1 Provincia che non ne ha.",
+   "sott_s": "Da reclutare:",
+   "testo_s": "L'MCP può piazzare 1 Guerriglia ciascuno in 2 Province."
+  },
+  {
+   "id": "M5",
+   "titolo": "Eredità dell'MPAJA",
+   "cap": "",
+   "sott_u": "Popolazione stremata:",
+   "testo_u": "Porta 1 spazio in Opposizione a Neutrale.",
+   "sott_s": "Forza antigiapponese:",
+   "testo_s": "Sposta 2 spazi con pezzi MCP di 1 livello verso l'Opposizione."
+  },
+  {
+   "id": "M6",
+   "titolo": "Chin Peng",
+   "cap": "",
+   "sott_u": "Taglia britannica di 250.000 $:",
+   "testo_u": "Attiva tutte le Guerriglie in 1 Provincia con una Base e portaci 2 Truppe.",
+   "sott_s": "Capo dell'MCP:",
+   "testo_s": "L'MCP può fare 2 Operazioni Limitate gratuite."
+  },
+  {
+   "id": "M7",
+   "titolo": "Sindacati",
+   "cap": "",
+   "sott_u": "Repressi:",
+   "testo_u": "Risorse MCP −3. Kuala Lumpur passa a Supporto.",
+   "sott_s": "Sostengono l'MCP:",
+   "testo_s": "Risorse MCP +5. Kuala Lumpur passa a Neutrale."
+  },
+  {
+   "id": "M8",
+   "titolo": "MNLA",
+   "cap": "ins",
+   "sott_u": "Perdite elevate:",
+   "testo_u": "L'MCP deve rimuovere 1 Guerriglia attaccante per ogni Truppa rimossa.",
+   "sott_s": "Ala armata:",
+   "testo_s": "Attacco e Imboscata rimuovono 2 cubi britannici qualsiasi in ogni spazio scelto."
+  },
+  {
+   "id": "M9",
+   "titolo": "Batang Kali",
+   "cap": "",
+   "sott_u": "Gli inglesi terrorizzano la gente:",
+   "testo_u": "Rappresaglia britannica in 1 spazio con Truppe e poi Assalto gratuito lì.",
+   "sott_s": "Massacro brutale:",
+   "testo_s": "Porta 1 Provincia a Opposizione, poi Volontà Politica −2."
+  },
+  {
+   "id": "M10",
+   "titolo": "Gurney ucciso",
+   "cap": "",
+   "sott_u": "Coloni compatti:",
+   "testo_u": "Piazza 1 Polizia ciascuno in 3 spazi con pezzi britannici.",
+   "sott_s": "L'MCP uccide il capo:",
+   "testo_s": "L'effetto del Comandante è annullato fino al Reset. Piazza 1 Guerriglia ovunque."
+  },
+  {
+   "id": "M11",
+   "titolo": "Defolianti chimici",
+   "cap": "",
+   "sott_u": "Raccolti negati ai terroristi:",
+   "testo_u": "Risorse MCP −1 per ogni Base in Provincia di Giungla.",
+   "sott_s": "Programma controverso:",
+   "testo_s": "Sposta uno spazio con Base di 1 livello verso l'Opposizione. Volontà Politica −1."
+  },
+  {
+   "id": "M12",
+   "titolo": "Orang Asli",
+   "cap": "",
+   "sott_u": "Protetti dai forti nella giungla:",
+   "testo_u": "Piazza fino a 2 Polizia ciascuno in 2 Province di Giungla senza Controllo MCP.",
+   "sott_s": "Riforniscono l'MCP:",
+   "testo_s": "Piazza una Base in una Provincia di Giungla."
+  },
+  {
+   "id": "M13",
+   "titolo": "Polizia malese",
+   "cap": "",
+   "sott_u": "I malesi con gli inglesi:",
+   "testo_u": "Piazza fino a 4 Polizia in totale in spazi a Controllo britannico.",
+   "sott_s": "Cinesi alienati:",
+   "testo_s": "Sposta uno spazio con Polizia di 1 livello verso l'Opposizione."
+  },
+  {
+   "id": "M14",
+   "titolo": "Guerra di Corea",
+   "cap": "",
+   "sott_u": "Gomma e stagno alle stelle:",
+   "testo_u": "Risorse britanniche +10. Volontà Politica +1.",
+   "sott_s": "Distrae dall'Emergenza:",
+   "testo_s": "Risorse britanniche −4."
+  },
+  {
+   "id": "M15",
+   "titolo": "Calma urbana",
+   "cap": "",
+   "sott_u": "Centro coloniale:",
+   "testo_u": "Addestramento gratuito a Kuala Lumpur, poi un'Operazione Limitata gratuita a Kuala Lumpur o adiacente.",
+   "sott_s": "Guerriglie infiltrate:",
+   "testo_s": "Piazza una Guerriglia a Kuala Lumpur."
+  },
+  {
+   "id": "M16",
+   "titolo": "Deportazioni",
+   "cap": "",
+   "sott_u": "Deportati in Cina:",
+   "testo_u": "I Britannici possono rimuovere 3 pezzi MCP in totale da spazi a Controllo britannico (+1 VP per Base).",
+   "sott_s": "Famiglie separate:",
+   "testo_s": "Sposta 1 Provincia di 1 livello verso l'Opposizione, poi piazzaci una Guerriglia."
+  },
+  {
+   "id": "M17",
+   "titolo": "Special Branch",
+   "cap": "",
+   "sott_u": "Raccoglie informazioni:",
+   "testo_u": "Attiva tutte le Guerriglie in 2 spazi. I Britannici possono fare un Assalto gratuito in 1 spazio.",
+   "sott_s": "False piste:",
+   "testo_s": "Tutte le Guerriglie tornano clandestine."
+  },
+  {
+   "id": "M18",
+   "titolo": "Scuola di guerra nella giungla",
+   "cap": "brit",
+   "sott_u": "Tattiche migliori:",
+   "testo_u": "Il Rastrellamento attiva 1 Guerriglia per cubo anche in Giungla.",
+   "sott_s": "Schieramento ritardato:",
+   "testo_s": "Ogni spazio d'Addestramento che piazza Truppe costa 4 Risorse."
+  },
+  {
+   "id": "M19",
+   "titolo": "Negazione del cibo",
+   "cap": "",
+   "sott_u": "Affamare l'MCP:",
+   "testo_u": "Per ogni Nuovo Villaggio sulla mappa l'MCP rimuove 1 Guerriglia o perde 1 Risorsa.",
+   "sott_s": "Civili solidali:",
+   "testo_s": "L'MCP guadagna Risorse pari agli spazi con pezzi MCP e Nuovi Villaggi."
+  },
+  {
+   "id": "M20",
+   "titolo": "Raggruppamento",
+   "cap": "",
+   "sott_u": "Cantieri fortificati:",
+   "testo_u": "Piazza fino a 2 Polizia in ogni Centro economico. Poi i Britannici possono piazzare 1 Nuovo Villaggio adiacente a un Centro economico.",
+   "sott_s": "Condizioni misere:",
+   "testo_s": "Porta 1 spazio con Nuovo Villaggio a Opposizione. Piazza 1 Guerriglia in un Centro economico."
+  },
+  {
+   "id": "M21",
+   "titolo": "Aree bianche",
+   "cap": "",
+   "sott_u": "Restrizioni revocate:",
+   "testo_u": "Porta uno spazio con Nuovo Villaggio a Supporto e poi togli il Nuovo Villaggio.",
+   "sott_s": "Revocate troppo presto:",
+   "testo_s": "Sostituisci 1 Nuovo Villaggio con una Guerriglia."
+  },
+  {
+   "id": "M22",
+   "titolo": "Partiti nazionalisti",
+   "cap": "",
+   "sott_u": "Strada alternativa:",
+   "testo_u": "Sposta 2 spazi di 1 livello verso il Supporto. Volontà Politica +1.",
+   "sott_s": "Esclusione dei cinesi:",
+   "testo_s": "L'MCP può fare Raduno gratuito in 3 spazi."
+  },
+  {
+   "id": "M23",
+   "titolo": "Nuove direttive",
+   "cap": "",
+   "sott_u": "Lontano dal terrore:",
+   "testo_u": "Togli tutti i Sabotaggi e i Terrori dai Centri economici e da Kuala Lumpur.",
+   "sott_s": "Colpire gli inglesi:",
+   "testo_s": "L'MCP può fare una Marcia Limitata gratuita seguita da un Attacco Limitato gratuito."
+  },
+  {
+   "id": "M24",
+   "titolo": "Governo britannico",
+   "cap": "",
+   "sott_u": "Chiede una nuova strategia:",
+   "testo_u": "Risorse britanniche +6 oppure Volontà Politica −1. Sposta il Comandante di 1 in una direzione."
+  },
+  {
+   "id": "M25",
+   "titolo": "Piantatori e minatori",
+   "cap": "",
+   "sott_u": "Risorse per l'Impero:",
+   "testo_u": "Risorse britanniche +6. Piazza fino a 1 Polizia in ogni Centro economico.",
+   "sott_s": "Chiedono protezione:",
+   "testo_s": "Sposta tutte le Truppe di 1 Provincia in un Centro economico o a Kuala Lumpur."
+  },
+  {
+   "id": "M26",
+   "titolo": "Regolamenti d'emergenza",
+   "cap": "",
+   "sott_u": "Punizioni collettive:",
+   "testo_u": "Piazza 1 Terrore ciascuna in 2 Province a Controllo britannico con pezzi MCP. Portale a Neutrale e poi Volontà Politica −1."
+  },
+  {
+   "id": "M27",
+   "titolo": "Cani da guardia",
+   "cap": "ins",
+   "sott_u": "Collaborazione locale:",
+   "testo_u": "L'Intimidazione sceglie al massimo 1 spazio e la Guerriglia usata si attiva.",
+   "sott_s": "Colpire i traditori:",
+   "testo_s": "Il Terrore può anche rimuovere 1 Polizia da ogni spazio scelto."
+  },
+  {
+   "id": "M28",
+   "titolo": "Unità di comando",
+   "cap": "brit",
+   "sott_u": "Poteri civili e militari:",
+   "testo_u": "La Pacificazione (con l'Addestramento o in Propaganda) può spostare di 2 livelli verso il Supporto.",
+   "sott_s": "Compiti travolgenti:",
+   "testo_s": "La Pacificazione costa 3 Risorse per Terrore rimosso o passo verso il Supporto."
+  },
+  {
+   "id": "M29",
+   "titolo": "Taglie sulle armi",
+   "cap": "",
+   "sott_u": "Incoraggiare la defezione:",
+   "testo_u": "I Britannici possono pagare fino a 3 Risorse per rimuovere 1 Guerriglia per Risorsa.",
+   "sott_s": "Consegnano i peggiori:",
+   "testo_s": "Trasferisci 2 Risorse dai Britannici all'MCP."
+  },
+  {
+   "id": "M30",
+   "titolo": "Vittoria del PCC",
+   "cap": "",
+   "sott_u": "Nessun aiuto:",
+   "testo_u": "Risorse MCP −3. Rimuovi 2 Guerriglie.",
+   "sott_s": "L'MCP si rinvigorisce:",
+   "testo_s": "Raduno gratuito MCP in 2 spazi, poi Agitazione gratuita in 1 spazio di Raduno con Base."
+  },
+  {
+   "id": "M31",
+   "titolo": "Reclute dalla Palestina",
+   "cap": "",
+   "sott_u": "Agenti speciali:",
+   "testo_u": "Piazza fino a 4 Polizia in spazi a Controllo britannico.",
+   "sott_s": "Tattiche controproducenti:",
+   "testo_s": "Raduno gratuito MCP in 2 spazi e poi sposta uno spazio scelto di 1 livello verso l'Opposizione."
+  },
+  {
+   "id": "M32",
+   "titolo": "SEP",
+   "cap": "",
+   "sott_u": "Personale nemico arreso:",
+   "testo_u": "I Britannici possono sostituire fino a 2 Guerriglie con Polizia in o vicino a spazi a Controllo britannico.",
+   "sott_s": "Infiltrazione accelerata:",
+   "testo_s": "Intimidazione MCP in 2 spazi."
+  },
+  {
+   "id": "MP1",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  },
+  {
+   "id": "MP2",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  },
+  {
+   "id": "MP3",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  }
+ ]
+}

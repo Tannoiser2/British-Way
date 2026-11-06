@@ -1,0 +1,246 @@
+{
+ "spazi": [
+  {
+   "id": "thailandia",
+   "nome": "Thailandia",
+   "tipo": "thai",
+   "x": 0.3096118299445471,
+   "y": 0.17142857142857143,
+   "adj": [
+    "kedah",
+    "perak",
+    "kelantan"
+   ],
+   "r": 0.0,
+   "pop": 0
+  },
+  {
+   "id": "kedah",
+   "nome": "Kedah",
+   "tipo": "prov_g",
+   "x": 0.1756007393715342,
+   "y": 0.2357142857142857,
+   "adj": [
+    "thailandia",
+    "perak"
+   ],
+   "r": 0.0,
+   "pop": 2
+  },
+  {
+   "id": "perak",
+   "nome": "Perak",
+   "tipo": "prov_m",
+   "x": 0.22643253234750463,
+   "y": 0.41785714285714287,
+   "adj": [
+    "thailandia",
+    "kedah",
+    "kelantan",
+    "pahang",
+    "selangor",
+    "ec_stagno"
+   ],
+   "r": 0.0,
+   "pop": 3
+  },
+  {
+   "id": "kelantan",
+   "nome": "Kelantan",
+   "tipo": "prov_g",
+   "x": 0.4343807763401109,
+   "y": 0.35714285714285715,
+   "adj": [
+    "thailandia",
+    "perak",
+    "trengganu",
+    "pahang",
+    "ec_stagno"
+   ],
+   "r": 0.0,
+   "pop": 2
+  },
+  {
+   "id": "trengganu",
+   "nome": "Trengganu",
+   "tipo": "prov_g",
+   "x": 0.6377079482439926,
+   "y": 0.42142857142857143,
+   "adj": [
+    "kelantan",
+    "pahang"
+   ],
+   "r": 0.0,
+   "pop": 1
+  },
+  {
+   "id": "pahang",
+   "nome": "Pahang",
+   "tipo": "prov_g",
+   "x": 0.5730129390018485,
+   "y": 0.5928571428571429,
+   "adj": [
+    "perak",
+    "kelantan",
+    "trengganu",
+    "selangor",
+    "kl",
+    "negri",
+    "johore",
+    "ec_stagno",
+    "ec_gomma"
+   ],
+   "r": 0.0,
+   "pop": 1
+  },
+  {
+   "id": "selangor",
+   "nome": "Selangor",
+   "tipo": "prov_m",
+   "x": 0.27726432532347506,
+   "y": 0.6464285714285715,
+   "adj": [
+    "perak",
+    "pahang",
+    "kl",
+    "negri"
+   ],
+   "r": 0.0,
+   "pop": 1
+  },
+  {
+   "id": "kl",
+   "nome": "Kuala Lumpur",
+   "tipo": "kl",
+   "x": 0.4232902033271719,
+   "y": 0.6157142857142858,
+   "adj": [
+    "selangor",
+    "pahang",
+    "negri",
+    "ec_gomma"
+   ],
+   "r": 0.066543438077634,
+   "pop": 2
+  },
+  {
+   "id": "negri",
+   "nome": "Negri Sembilan",
+   "tipo": "prov_g",
+   "x": 0.466728280961183,
+   "y": 0.7642857142857142,
+   "adj": [
+    "selangor",
+    "kl",
+    "pahang",
+    "johore",
+    "ec_gomma"
+   ],
+   "r": 0.0,
+   "pop": 2
+  },
+  {
+   "id": "johore",
+   "nome": "Johore",
+   "tipo": "prov_g",
+   "x": 0.711645101663586,
+   "y": 0.8678571428571429,
+   "adj": [
+    "pahang",
+    "negri",
+    "ec_gomma"
+   ],
+   "r": 0.0,
+   "pop": 2
+  },
+  {
+   "id": "ec_stagno",
+   "nome": "Centro econ. (stagno)",
+   "tipo": "ec",
+   "x": 0.3077634011090573,
+   "y": 0.42857142857142855,
+   "adj": [
+    "perak",
+    "kelantan",
+    "pahang"
+   ],
+   "r": 0.04805914972273567,
+   "pop": 0,
+   "econ": 6
+  },
+  {
+   "id": "ec_gomma",
+   "nome": "Centro econ. (gomma)",
+   "tipo": "ec",
+   "x": 0.5868761552680222,
+   "y": 0.675,
+   "adj": [
+    "pahang",
+    "negri",
+    "johore",
+    "kl"
+   ],
+   "r": 0.04805914972273567,
+   "pop": 0,
+   "econ": 6
+  }
+ ],
+ "pw_track": {
+  "x0": 0.9269870609981515,
+  "y0": 0.9442857142857143,
+  "dx": 0,
+  "dy": -0.04442857142857143,
+  "max": 20
+ },
+ "setup": {
+  "pw": 12,
+  "comandante": 0,
+  "primo": "brit",
+  "ris": {
+   "brit": 20,
+   "ins": 10
+  },
+  "disp": {
+   "t": 7,
+   "p": 9,
+   "g": 9,
+   "b": 2
+  },
+  "spazi": {
+   "kl": {
+    "t": 4,
+    "p": 2,
+    "sup": 1
+   },
+   "perak": {
+    "g": 1,
+    "t": 2,
+    "p": 2
+   },
+   "johore": {
+    "g": 1,
+    "t": 2,
+    "p": 2
+   },
+   "pahang": {
+    "b": 1,
+    "g": 2,
+    "sup": -1
+   },
+   "kelantan": {
+    "b": 1,
+    "g": 1
+   },
+   "trengganu": {
+    "g": 1
+   }
+  }
+ },
+ "pezzi": {
+  "t": 15,
+  "p": 15,
+  "g": 15,
+  "b": 4
+ },
+ "nuovi_villaggi": 4
+}

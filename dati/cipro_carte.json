@@ -1,0 +1,299 @@
+{
+ "carte": [
+  {
+   "id": "C1",
+   "titolo": "Makarios III",
+   "cap": "",
+   "sott_u": "Agitatore deportato:",
+   "testo_u": "I Britannici possono fare un Ripristino in 2 spazi qualsiasi con cubi e senza EOKA.",
+   "sott_s": "Capo politico dell'Enosis:",
+   "testo_s": "Sposta l'Opinione internazionale di 2 a destra."
+  },
+  {
+   "id": "C2",
+   "titolo": "Georgios Grivas",
+   "cap": "",
+   "sott_u": "Fugge lasciando documenti:",
+   "testo_u": "In uno spazio con Truppe, Assalto che rimuove per primi i Depositi d'armi.",
+   "sott_s": "Capo dell'EOKA:",
+   "testo_s": "L'EOKA fa 3 Operazioni Limitate."
+  },
+  {
+   "id": "C3",
+   "titolo": "AKEL",
+   "cap": "",
+   "sott_u": "Operazione Lobster Pot:",
+   "testo_u": "I Britannici possono fare una Pattuglia Limitata, poi Volontà Politica +1.",
+   "sott_s": "Partito comunista cipriota:",
+   "testo_s": "L'EOKA può fare Propaganda in 1 spazio con Cellula e Coprifuoco."
+  },
+  {
+   "id": "C4",
+   "titolo": "Crisi di Suez",
+   "cap": "",
+   "sott_u": "Truppe ritirate:",
+   "testo_u": "Togli 3 Truppe dalla mappa fino al Reset della prossima Propaganda, poi rientrano in una qualsiasi Base britannica."
+  },
+  {
+   "id": "C5",
+   "titolo": "Governo turco",
+   "cap": "",
+   "sott_u": "Difende la minoranza:",
+   "testo_u": "Sposta l'Opinione internazionale di 2 a sinistra.",
+   "sott_s": "Incoraggia il TMT:",
+   "testo_s": "Piazza un Sabotaggio in 1 Città con Polizia ed EOKA."
+  },
+  {
+   "id": "C6",
+   "titolo": "Operazione Pepperpot",
+   "cap": "",
+   "sott_u": "Rastrellamento dei monti:",
+   "testo_u": "I Britannici possono portare quanti cubi vogliono nei Monti e Perquisire in ciascuno.",
+   "sott_s": "L'EOKA è avvisata:",
+   "testo_s": "L'EOKA può fare uno Spostamento da ogni spazio di Monti."
+  },
+  {
+   "id": "C7",
+   "titolo": "Detenzione di massa",
+   "cap": "",
+   "sott_u": "Retata:",
+   "testo_u": "Manda in Prigione tutte le Cellule negli spazi con Coprifuoco.",
+   "sott_s": "Nuove reclute:",
+   "testo_s": "In ogni spazio con Coprifuoco, rimetti fino a 1 Cellula dalla Prigione."
+  },
+  {
+   "id": "C8",
+   "titolo": "Rivolta degli studenti",
+   "cap": "",
+   "sott_u": "Scuola riformata:",
+   "testo_u": "Rimuovi 2 Cellule da spazi qualsiasi.",
+   "sott_s": "Manifestazioni:",
+   "testo_s": "L'EOKA può fare Propaganda in 1 spazio con Coprifuoco (anche senza Cellula)."
+  },
+  {
+   "id": "C9",
+   "titolo": "Blocco della Royal Navy",
+   "cap": "ins",
+   "sott_u": "Contrabbando intercettato:",
+   "testo_u": "Per piazzare un Deposito col Contrabbando l'EOKA deve tirare più di 3.",
+   "sott_s": "Flotta elusa:",
+   "testo_s": "Il Contrabbando può scegliere qualsiasi Città o Monti."
+  },
+  {
+   "id": "C10",
+   "titolo": "Maniere forti",
+   "cap": "brit",
+   "sott_u": "Ottiene informazioni:",
+   "testo_u": "L'Interrogatorio dà 1 Intel per ogni Cellula in Prigione.",
+   "sott_s": "Accuse di tortura:",
+   "testo_s": "L'Interrogatorio riduce anche la Volontà Politica di 1."
+  },
+  {
+   "id": "C11",
+   "titolo": "Appelli all'ONU",
+   "cap": "",
+   "sott_u": "Ignorati:",
+   "testo_u": "Porta l'Opinione internazionale a Ignorata.",
+   "sott_s": "Dibattuti:",
+   "testo_s": "Porta l'Opinione internazionale a Dibattuta."
+  },
+  {
+   "id": "C12",
+   "titolo": "Hugh Foot",
+   "cap": "",
+   "sott_u": "Nuovo approccio:",
+   "testo_u": "I Britannici fanno 2 Operazioni Limitate e poi un'Attività Speciale qualsiasi.",
+   "sott_s": "Accolto col terrore:",
+   "testo_s": "L'EOKA può Sabotare fino a 3 spazi."
+  },
+  {
+   "id": "C13",
+   "titolo": "Comitati per i diritti umani",
+   "cap": "ins",
+   "sott_u": "Visti come propaganda:",
+   "testo_u": "La Propaganda negli spazi con Coprifuoco sposta l'Opinione di 1 solo passo.",
+   "sott_s": "Denuncia degli abusi:",
+   "testo_s": "La Propaganda può scegliere 2 spazi."
+  },
+  {
+   "id": "C14",
+   "titolo": "Radio Atene",
+   "cap": "",
+   "sott_u": "Disturbata dalla Grecia:",
+   "testo_u": "Se l'Opinione è Discussa o Ignorata, rimuovi 3 Cellule qualsiasi dalla mappa.",
+   "sott_s": "Attira reclute:",
+   "testo_s": "Piazza 3 Cellule in totale in Città o Monti."
+  },
+  {
+   "id": "C15",
+   "titolo": "John Harding",
+   "cap": "",
+   "sott_u": "Approccio militare:",
+   "testo_u": "Piazza un Coprifuoco in una Città con Truppe, poi Perquisizione e Assalto lì.",
+   "sott_s": "Falliscono i colloqui con Makarios:",
+   "testo_s": "Sposta l'Opinione internazionale di 2 a destra."
+  },
+  {
+   "id": "C16",
+   "titolo": "Pattuglie Q",
+   "cap": "",
+   "sott_u": "Stanare l'EOKA:",
+   "testo_u": "Rimuovi 1 pezzo EOKA da ciascuno di fino a 3 spazi con Truppe (massimo 1 Deposito; +1 VP se Deposito).",
+   "sott_s": "Terrorizzano i civili:",
+   "testo_s": "Piazza un Sabotaggio in fino a 2 Città con Truppe."
+  },
+  {
+   "id": "C17",
+   "titolo": "Special Branch",
+   "cap": "brit",
+   "sott_u": "Raccolta di informazioni:",
+   "testo_u": "L'Interrogatorio può dare invece tanti Intel quanti spazi con Polizia e Cellule.",
+   "sott_s": "Polizia allo stremo:",
+   "testo_s": "La Pattuglia rimuove solo 1 Cellula ogni 2 Polizia."
+  },
+  {
+   "id": "C18",
+   "titolo": "Accerchiamento e perquisizione",
+   "cap": "brit",
+   "sott_u": "Ricerche e arresti:",
+   "testo_u": "Le Cellule che si Spostano in spazi con Coprifuoco diventano sempre attive. All'inizio del Reset tutte le Cellule negli spazi con Coprifuoco vanno in Prigione.",
+   "sott_s": "Le Cellule passano:",
+   "testo_s": "Una sola Cellula può sempre Spostarsi in uno spazio con Coprifuoco senza attivarsi."
+  },
+  {
+   "id": "C19",
+   "titolo": "Bande di montagna",
+   "cap": "",
+   "sott_u": "Isolati e circondati:",
+   "testo_u": "I Britannici possono Perquisire in 1 spazio di Monti e poi fare un Assalto lì.",
+   "sott_s": "Attirare gli inglesi fuori città:",
+   "testo_s": "Sposta fino a 6 Truppe britanniche dalle Città a 1 spazio di Monti."
+  },
+  {
+   "id": "C20",
+   "titolo": "Movimenti giovanili",
+   "cap": "",
+   "sott_u": "Coprifuoco imposto:",
+   "testo_u": "Piazza fino a 2 Coprifuochi in Città con Truppe.",
+   "sott_s": "Usati per reclutare:",
+   "testo_s": "Piazza 3 Cellule in Città qualsiasi."
+  },
+  {
+   "id": "C21",
+   "titolo": "Programma di sviluppo",
+   "cap": "",
+   "sott_u": "Conquistare cuori e menti:",
+   "testo_u": "Volontà Politica +1 per ogni Città con Truppe e Polizia e senza EOKA, Sabotaggi né Coprifuoco.",
+   "sott_s": "La lealtà non si compra:",
+   "testo_s": "Piazza 2 Cellule in totale in Città qualsiasi."
+  },
+  {
+   "id": "C22",
+   "titolo": "Governo greco",
+   "cap": "",
+   "sott_u": "Opinione critica sull'Enosis:",
+   "testo_u": "Sposta l'Opinione internazionale fino a 2 passi in una direzione. Poi piazza 2 Cellule in Città oppure rimuovi 2 Cellule da spazi qualsiasi."
+  },
+  {
+   "id": "C23",
+   "titolo": "Moti di piazza",
+   "cap": "ins",
+   "sott_u": "Folla dispersa:",
+   "testo_u": "Ogni spazio scelto per il Sabotaggio con pezzi britannici e più di 1 Cellula deve prima perdere 1 Cellula.",
+   "sott_s": "Manifestazioni:",
+   "testo_s": "Un solo spazio scelto per il Sabotaggio può usare una Cellula già attiva."
+  },
+  {
+   "id": "C24",
+   "titolo": "Turco-ciprioti",
+   "cap": "",
+   "sott_u": "Rafforzare la polizia:",
+   "testo_u": "Piazza tutta la Polizia Disponibile in spazi con pezzi britannici, poi Pattuglia in fino a 2 spazi.",
+   "sott_s": "Violenza tra comunità:",
+   "testo_s": "Piazza un Sabotaggio in fino a 2 Città con Cellule e Polizia."
+  },
+  {
+   "id": "C25",
+   "titolo": "Assassinii",
+   "cap": "ins",
+   "sott_u": "Controspionaggio limitato:",
+   "testo_u": "L'Infiltrazione sostituisce la Polizia oppure scarta un Intel, non entrambe.",
+   "sott_s": "Nicos Sampson:",
+   "testo_s": "L'Infiltrazione può invece scegliere uno spazio con una Cellula clandestina per rimuovere 1 Polizia."
+  },
+  {
+   "id": "C26",
+   "titolo": "Volkan/TMT",
+   "cap": "",
+   "sott_u": "Gruppi della resistenza turca:",
+   "testo_u": "In fino a 2 spazi con Cellule e Polizia, rimuovi 1 Cellula per piazzare un Sabotaggio."
+  },
+  {
+   "id": "C27",
+   "titolo": "Prigione del castello di Kyrenia",
+   "cap": "",
+   "sott_u": "Attacco sventato:",
+   "testo_u": "Manda in Prigione 1 Cellula da uno spazio qualsiasi, poi Interrogatorio.",
+   "sott_s": "Evasione:",
+   "testo_s": "Tutte le Cellule in Prigione tornano Disponibili."
+  },
+  {
+   "id": "C28",
+   "titolo": "Basi britanniche",
+   "cap": "",
+   "sott_u": "Portaerei inaffondabile:",
+   "testo_u": "Volontà Politica +1 per ogni Base britannica senza Sabotaggi né pezzi EOKA.",
+   "sott_s": "Tentativi di sabotaggio:",
+   "testo_s": "Piazza una Cellula in ogni Base britannica, poi l'EOKA può Sabotare in ciascuna."
+  },
+  {
+   "id": "C29",
+   "titolo": "Piano Macmillan",
+   "cap": "",
+   "sott_u": "Offerta di compromesso:",
+   "testo_u": "Volontà Politica −1 per togliere 2 Sabotaggi oppure spostare l'Opinione di 2 a sinistra.",
+   "sott_s": "Piano respinto:",
+   "testo_s": "Volontà Politica +1 per Sabotare fino a 3 spazi."
+  },
+  {
+   "id": "C30",
+   "titolo": "Operazione «Avanti alla vittoria»",
+   "cap": "",
+   "sott_u": "Offensiva prevenuta:",
+   "testo_u": "I Britannici possono Perquisire in 1 spazio e poi fare un Assalto lì.",
+   "sott_s": "Campagna di terrore di Grivas:",
+   "testo_s": "L'EOKA può Sabotare in ogni Città con Cellule clandestine."
+  },
+  {
+   "id": "C31",
+   "titolo": "Polizia turca",
+   "cap": "dual",
+   "sott_u": "Moltiplicatore di forze e bersaglio dell'EOKA:",
+   "testo_u": "L'Infiltrazione rimuove soltanto la Polizia (senza sostituirla) e non scarta più Intel. La Polizia non sottrae più ai dadi del Sabotaggio."
+  },
+  {
+   "id": "C32",
+   "titolo": "Imboscate stradali",
+   "cap": "ins",
+   "sott_u": "Adattarsi agli attacchi:",
+   "testo_u": "L'Imboscata negli spazi con Truppe deve anche rimuovere la Cellula attivata.",
+   "sott_s": "Camion attaccati:",
+   "testo_s": "In 1 spazio d'Imboscata con Truppe l'EOKA può ridurre la VP di 1 se riesce, ma non rimuove Polizia."
+  },
+  {
+   "id": "CP1",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  },
+  {
+   "id": "CP2",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  },
+  {
+   "id": "CP3",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  }
+ ]
+}

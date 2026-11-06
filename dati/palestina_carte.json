@@ -1,0 +1,301 @@
+{
+ "carte": [
+  {
+   "id": "P1",
+   "titolo": "Operazione Agatha",
+   "cap": "",
+   "sott_u": "Sabato nero:",
+   "testo_u": "I Britannici fanno una Perquisizione in 1 Città e poi una Detenzione di massa lì. Sposta il tracciato dell'Haganah di 1 a sinistra.",
+   "sott_s": "Arresto dei moderati:",
+   "testo_s": "Sposta il tracciato dell'Haganah di 1 a destra. Se ora è a 4, l'Irgun può Sabotare in 1 spazio."
+  },
+  {
+   "id": "P2",
+   "titolo": "Affare Exodus*",
+   "cap": "",
+   "sott_u": "Stretta sull'immigrazione:",
+   "testo_u": "Manda in Prigione tutte le Cellule dei Distretti costieri con Truppe.",
+   "sott_s": "Britannia screditata:",
+   "testo_s": "Riduci la Volontà Politica di 3."
+  },
+  {
+   "id": "P3",
+   "titolo": "Hotel King David",
+   "cap": "",
+   "sott_u": "Condanna generale:",
+   "testo_u": "Togli 1 segnalino Terrore dalla mappa per spostare l'Haganah di 1 a sinistra.",
+   "sott_s": "Orribile attentato:",
+   "testo_s": "Piazza 2 segnalini Terrore in 1 Città con una Cellula clandestina."
+  },
+  {
+   "id": "P4",
+   "titolo": "Immigrazione illegale*",
+   "cap": "",
+   "sott_u": "Ingresso bloccato:",
+   "testo_u": "Se non ci sono Sabotaggi nei Distretti costieri, Volontà Politica +2. Altrimenti −1 ogni 2 Sabotaggi o pezzi Irgun nei Distretti costieri (massimo −3)."
+  },
+  {
+   "id": "P5",
+   "titolo": "Evasione da Acri",
+   "cap": "",
+   "sott_u": "Prigionieri in Eritrea:",
+   "testo_u": "Togli dal gioco fino a 2 Cellule in Prigione.",
+   "sott_s": "Evasione di massa:",
+   "testo_s": "Tutte le Cellule in Prigione tornano Disponibili."
+  },
+  {
+   "id": "P6",
+   "titolo": "Montgomery",
+   "cap": "",
+   "sott_u": "Linea dura:",
+   "testo_u": "I Britannici possono Perquisire fino a 3 spazi, ma senza usare Intel.",
+   "sott_s": "Ignora le città:",
+   "testo_s": "Piazza 1 Cellula in ogni Città senza Truppe."
+  },
+  {
+   "id": "P7",
+   "titolo": "Lehi",
+   "cap": "",
+   "sott_u": "Scarso coordinamento:",
+   "testo_u": "Rimuovi fino a 1 Cellula in ogni spazio con più di 1 Cellula.",
+   "sott_s": "Assassinii:",
+   "testo_s": "Rimuovi fino a 1 Polizia da ogni spazio con una Cellula clandestina."
+  },
+  {
+   "id": "P8",
+   "titolo": "Harry Truman*",
+   "cap": "",
+   "sott_u": "Offre sostegno:",
+   "testo_u": "Volontà Politica +2. I Britannici possono Schierarsi in fino a 3 spazi.",
+   "sott_s": "Pressioni sugli inglesi:",
+   "testo_s": "Volontà Politica −1 per ogni Coprifuoco sulla mappa."
+  },
+  {
+   "id": "P9",
+   "titolo": "Ernest Bevin",
+   "cap": "brit",
+   "sott_u": "Ministro degli Esteri:",
+   "testo_u": "Gli eventi con asterisco (*) fanno perdere 1 Volontà Politica in meno.",
+   "sott_s": "Potenza in declino:",
+   "testo_s": "Le Operazioni britanniche sono limitate a 2 spazi invece di 3."
+  },
+  {
+   "id": "P10",
+   "titolo": "Polizia della Palestina",
+   "cap": "",
+   "sott_u": "Guardia alle ferrovie:",
+   "testo_u": "Piazza fino a tutta la Polizia Disponibile negli spazi Ferrovia.",
+   "sott_s": "Fondi scarsi:",
+   "testo_s": "Metà della Polizia sulla mappa (per difetto) torna Disponibile."
+  },
+  {
+   "id": "P11",
+   "titolo": "Operazione Shark",
+   "cap": "",
+   "sott_u": "Giro di vite sull'Irgun:",
+   "testo_u": "Perquisizione e poi Assalto in 1 Città. Rimuovi un Deposito d'armi entro 1 spazio dalla Città (+1 VP se rimosso).",
+   "sott_s": "I capi sfuggono:",
+   "testo_s": "Spostamento da fino a 2 spazi con Cellule e Coprifuoco."
+  },
+  {
+   "id": "P12",
+   "titolo": "Peter Bergson",
+   "cap": "",
+   "sott_u": "Proteste britanniche:",
+   "testo_u": "Togli 2 Depositi d'armi dalla mappa (senza guadagnare Volontà Politica).",
+   "sott_s": "Raccolta fondi in America:",
+   "testo_s": "Piazza fino a 2 Depositi d'armi in spazi con Cellule."
+  },
+  {
+   "id": "P13",
+   "titolo": "Palmach",
+   "cap": "ins",
+   "sott_u": "Pronti alla prossima guerra:",
+   "testo_u": "L'Haganah a 4 (Coordinamento) non dà più uno spazio in più alle Operazioni Irgun.",
+   "sott_s": "L'élite dell'Haganah:",
+   "testo_s": "Anche l'Haganah a 3 (Supporto) dà uno spazio in più alle Operazioni Irgun."
+  },
+  {
+   "id": "P14",
+   "titolo": "Legge marziale",
+   "cap": "",
+   "sott_u": "Perquisizioni estese:",
+   "testo_u": "I Britannici possono Perquisire fino a 2 Città, poi Detenzione di massa.",
+   "sott_s": "Popolazione irritata:",
+   "testo_s": "Piazza fino a 1 Cellula in ogni Città con Coprifuoco."
+  },
+  {
+   "id": "P15",
+   "titolo": "Chaim Weizmann",
+   "cap": "",
+   "sott_u": "Incontra i britannici:",
+   "testo_u": "Sposta l'Haganah di 1 a sinistra e togli fino a 1 Sabotaggio dalla mappa.",
+   "sott_s": "Moderati ignorati:",
+   "testo_s": "Sposta l'Haganah di 1 a destra. L'Irgun può Sabotare in 1 spazio."
+  },
+  {
+   "id": "P16",
+   "titolo": "Alan Cunningham",
+   "cap": "",
+   "sott_u": "Approccio misurato:",
+   "testo_u": "I Britannici possono fare 2 Operazioni Limitate e poi un Ripristino.",
+   "sott_s": "Cellule rilasciate:",
+   "testo_s": "I Britannici rimettono 2 Cellule dalla Prigione in qualsiasi Città."
+  },
+  {
+   "id": "P17",
+   "titolo": "Bevingrad",
+   "cap": "brit",
+   "sott_u": "Basi fortificate:",
+   "testo_u": "Il Terrore piazza al massimo 1 segnalino Terrore.",
+   "sott_s": "Isolati dalla popolazione:",
+   "testo_s": "Senza Intel, la Perquisizione in Città richiede 4 cubi per attivare una Cellula."
+  },
+  {
+   "id": "P18",
+   "titolo": "6ª Aviotrasportata",
+   "cap": "brit",
+   "sott_u": "Veterani esperti:",
+   "testo_u": "L'Assalto rimuove 1 pezzo Irgun per Truppa.",
+   "sott_s": "Le Cellule sfuggono:",
+   "testo_s": "Assalto e Detenzione di massa rimandano le Cellule tra i Disponibili (non in Prigione)."
+  },
+  {
+   "id": "P19",
+   "titolo": "Attentato all'ambasciata di Roma",
+   "cap": "",
+   "sott_u": "Complotto sventato:",
+   "testo_u": "Rimuovi fino a 2 Cellule e 1 Deposito d'armi (+1 VP se rimuovi il Deposito).",
+   "sott_s": "Attacchi all'estero:",
+   "testo_s": "Tira un dado: con più di 2, Volontà Politica −2."
+  },
+  {
+   "id": "P20",
+   "titolo": "Indipendenza indiana*",
+   "cap": "",
+   "sott_u": "Valore strategico della Palestina:",
+   "testo_u": "Volontà Politica +2 se nessuna Ferrovia è sabotata.",
+   "sott_s": "Pressioni crescenti:",
+   "testo_s": "Volontà Politica −2."
+  },
+  {
+   "id": "P21",
+   "titolo": "Movimento di Resistenza Unito",
+   "cap": "",
+   "sott_u": "La cooperazione crolla:",
+   "testo_u": "Sposta l'Haganah di 1 a sinistra. Rimuovi fino a 2 Cellule.",
+   "sott_s": "Offensiva sulle ferrovie:",
+   "testo_s": "Sposta l'Haganah di 1 a destra. Puoi Sabotare in ogni Ferrovia."
+  },
+  {
+   "id": "P22",
+   "titolo": "Agenzia Ebraica",
+   "cap": "",
+   "sott_u": "Cooperare o condannare?",
+   "testo_u": "Sposta l'Haganah di 1 in una delle due direzioni. Poi l'Irgun può fare un'Operazione Limitata oppure i Britannici pescano un Intel."
+  },
+  {
+   "id": "P23",
+   "titolo": "Mine stradali",
+   "cap": "ins",
+   "sott_u": "Autoblindo:",
+   "testo_u": "La Pattuglia può rimuovere Cellule in fino a 2 spazi scelti.",
+   "sott_s": "Primi ordigni:",
+   "testo_s": "Quando la Pattuglia porta Polizia in uno spazio con Sabotaggio, con 1-3 al dado 1 Polizia è rimossa."
+  },
+  {
+   "id": "P24",
+   "titolo": "Affare dei sergenti",
+   "cap": "",
+   "sott_u": "Reazione in Gran Bretagna:",
+   "testo_u": "Volontà Politica +1 per ogni Terrore sulla mappa (massimo +3).",
+   "sott_s": "Appelli al ritiro:",
+   "testo_s": "Volontà Politica −1 per ogni Terrore sulla mappa (massimo −3)."
+  },
+  {
+   "id": "P25",
+   "titolo": "Menachem Begin",
+   "cap": "ins",
+   "sott_u": "Documenti catturati:",
+   "testo_u": "Ogni Deposito rimosso con l'Assalto dà +2 VP e 2 Intel.",
+   "sott_s": "Capo dell'Irgun:",
+   "testo_s": "La Propaganda riduce la Volontà Politica di 2 per spazio scelto."
+  },
+  {
+   "id": "P26",
+   "titolo": "Veterani della guerra",
+   "cap": "",
+   "sott_u": "Esperti di resistenza e combattimento:",
+   "testo_u": "L'Irgun può Sabotare fino a 3 spazi oppure i Britannici possono fare un Assalto fino a 3 spazi. Chi esegue può aggiungere un'Attività Speciale valida."
+  },
+  {
+   "id": "P27",
+   "titolo": "Prestiti americani*",
+   "cap": "",
+   "sott_u": "Approvati dal Congresso:",
+   "testo_u": "I Britannici possono fare un'Operazione in fino a 4 spazi.",
+   "sott_s": "«Dunkerque finanziaria»:",
+   "testo_s": "Volontà Politica −1. I Britannici devono passare alla prossima carta senza pescare Intel."
+  },
+  {
+   "id": "P28",
+   "titolo": "CID",
+   "cap": "",
+   "sott_u": "Raccolta informazioni:",
+   "testo_u": "1 Intel per ogni spazio con Polizia e Cellule.",
+   "sott_s": "Quartier generale colpito:",
+   "testo_s": "L'Irgun può Sabotare in 1 spazio con Polizia e, se riesce, rimuove tutta la Polizia lì."
+  },
+  {
+   "id": "P29",
+   "titolo": "Coprifuochi",
+   "cap": "",
+   "sott_u": "Risposta punitiva:",
+   "testo_u": "All'inizio del Reset, rimuovi 1 Cellula da ogni spazio con Coprifuoco.",
+   "sott_s": "Misure che si ritorcono:",
+   "testo_s": "All'inizio del Reset, l'Irgun può piazzare 1 Cellula in ogni spazio con Coprifuoco."
+  },
+  {
+   "id": "P30",
+   "titolo": "Roy Farran",
+   "cap": "",
+   "sott_u": "Polizia in borghese:",
+   "testo_u": "Rimuovi 1 Cellula da ciascuno di fino a 3 spazi con Polizia.",
+   "sott_s": "Uccisione controversa:",
+   "testo_s": "Rimuovi 2 Polizia. Volontà Politica −1."
+  },
+  {
+   "id": "P31",
+   "titolo": "Dov Gruner",
+   "cap": "",
+   "sott_u": "Catturato e condannato:",
+   "testo_u": "Manda in Prigione una Cellula da 1 spazio con Truppe.",
+   "sott_s": "Infiamma la resistenza:",
+   "testo_s": "Piazza fino a 3 Cellule in totale in Città o Distretti."
+  },
+  {
+   "id": "P32",
+   "titolo": "Fabbriche d'armi",
+   "cap": "ins",
+   "sott_u": "Detonazione accidentale:",
+   "testo_u": "Se il dado del Sabotaggio Irgun è 1, la Cellula attivata è rimossa.",
+   "sott_s": "Ingegno artigianale:",
+   "testo_s": "La Rapina piazza sempre un Deposito d'armi (senza dado)."
+  },
+  {
+   "id": "PP1",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  },
+  {
+   "id": "PP2",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  },
+  {
+   "id": "PP3",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  }
+ ]
+}

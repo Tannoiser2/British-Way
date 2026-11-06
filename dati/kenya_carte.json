@@ -1,0 +1,299 @@
+{
+ "carte": [
+  {
+   "id": "K1",
+   "titolo": "Operazione Anvil",
+   "cap": "",
+   "sott_u": "Nairobi ripulita:",
+   "testo_u": "Rimuovi tutti i pezzi Mau Mau da Nairobi e portala a Lealtà. Sposta la Pipeline di 1 a destra (+1 VP per Base rimossa).",
+   "sott_s": "Rastrellamento indiscriminato:",
+   "testo_s": "Piazza 2 pezzi Mau Mau a Nairobi e spostala di 1 livello verso la Resistenza."
+  },
+  {
+   "id": "K2",
+   "titolo": "Jomo Kenyatta",
+   "cap": "",
+   "sott_u": "Arrestato con Jock Scott:",
+   "testo_u": "Rimuovi tutte le Guerriglie da Nairobi e spostala di 1 livello verso la Lealtà.",
+   "sott_s": "Processo controverso:",
+   "testo_s": "Piazza 1 Guerriglia a Nairobi e spostala di 1 livello verso la Resistenza."
+  },
+  {
+   "id": "K3",
+   "titolo": "Ala passiva",
+   "cap": "ins",
+   "sott_u": "Linee di rifornimento fragili:",
+   "testo_u": "Il Rifornimento richiede Controllo Mau Mau o Resistenza in ogni spazio tra Nairobi e le Basi.",
+   "sott_s": "Rete di sostegno:",
+   "testo_s": "2 Risorse per ogni Base rifornita."
+  },
+  {
+   "id": "K4",
+   "titolo": "Massacro di Lari",
+   "cap": "",
+   "sott_u": "Spirale di uccisioni:",
+   "testo_u": "Piazza un Terrore in 1 Provincia e portala a Neutrale; poi l'altro giocatore può piazzarci una Guerriglia o una Polizia."
+  },
+  {
+   "id": "K5",
+   "titolo": "Zone legali",
+   "cap": "brit",
+   "sott_u": "Aree proibite estese:",
+   "testo_u": "L'Attacco aereo può scegliere fino a 2 Province.",
+   "sott_s": "Aree proibite ristrette:",
+   "testo_s": "L'Attacco aereo può scegliere solo Giungle di montagna."
+  },
+  {
+   "id": "K6",
+   "titolo": "Guardia nazionale",
+   "cap": "",
+   "sott_u": "Proteggere le riserve:",
+   "testo_u": "Piazza 3 Polizia da ovunque (anche fuori gioco) in Province di Riserva a Controllo britannico.",
+   "sott_s": "Gli abusi creano reclute:",
+   "testo_s": "Sostituisci ogni Terrore negli spazi di Riserva con una Guerriglia."
+  },
+  {
+   "id": "K7",
+   "titolo": "Pseudo-bande",
+   "cap": "brit",
+   "sott_u": "Ex guerriglieri come segugi:",
+   "testo_u": "Nelle Giungle di montagna il Rastrellamento attiva 1 Guerriglia per cubo e ne rimuove 1.",
+   "sott_s": "Addestramento supplementare:",
+   "testo_s": "Lo Schieramento piazza cubi oppure sposta Truppe, non entrambe."
+  },
+  {
+   "id": "K8",
+   "titolo": "Evelyn Baring",
+   "cap": "",
+   "sott_u": "Dichiara l'Emergenza:",
+   "testo_u": "Sposta la Pipeline di 1 a destra. Schieramento o Rastrellamento in 2 spazi.",
+   "sott_s": "La rivolta dilaga:",
+   "testo_s": "I Mau Mau possono piazzare 1 Guerriglia ciascuno in 2 Province."
+  },
+  {
+   "id": "K9",
+   "titolo": "George Erskine",
+   "cap": "",
+   "sott_u": "Nuovo piano operativo:",
+   "testo_u": "I Britannici possono fare 2 Operazioni Limitate, poi spostare la Pipeline di 1 a sinistra.",
+   "sott_s": "Non ferma gli abusi:",
+   "testo_s": "Volontà Politica −1 se c'è uno spazio con Truppe e Terrore."
+  },
+  {
+   "id": "K10",
+   "titolo": "Penuria d'armi",
+   "cap": "",
+   "sott_u": "Mau Mau male armati:",
+   "testo_u": "Rimuovi 1 Guerriglia da ogni spazio che ne ha più di 2.",
+   "sott_s": "Assalto alla stazione di polizia:",
+   "testo_s": "I Mau Mau possono piazzare fino a 2 Guerriglie in 1 spazio con Polizia."
+  },
+  {
+   "id": "K11",
+   "titolo": "Piano Swynnerton",
+   "cap": "brit",
+   "sott_u": "Terra ai lealisti:",
+   "testo_u": "La Ricompensa può scegliere 2 spazi.",
+   "sott_s": "Riforme limitate:",
+   "testo_s": "A ogni Ricompensa i Mau Mau possono piazzare 1 Guerriglia in una Giungla di montagna."
+  },
+  {
+   "id": "K12",
+   "titolo": "Uomini incappucciati",
+   "cap": "",
+   "sott_u": "Identificare i Mau Mau:",
+   "testo_u": "Attiva tutte le Guerriglie in 2 Province.",
+   "sott_s": "Informatori eliminati:",
+   "testo_s": "In 1 spazio con Mau Mau e Polizia, rimuovi 1 Polizia e porta lo spazio a Resistenza."
+  },
+  {
+   "id": "K13",
+   "titolo": "Uccisa la famiglia Ruck",
+   "cap": "",
+   "sott_u": "Coloni compatti:",
+   "testo_u": "Porta 1 Provincia non di Riserva a Lealtà e piazzaci fino a 2 Polizia Disponibili.",
+   "sott_s": "I coloni chiedono truppe:",
+   "testo_s": "I Mau Mau possono spostare le Truppe di 1 spazio in una Provincia non di Riserva."
+  },
+  {
+   "id": "K14",
+   "titolo": "Waruhiu Itote",
+   "cap": "",
+   "sott_u": "Convince altri alla resa:",
+   "testo_u": "Rimuovi 1 Guerriglia da ogni Giungla di montagna.",
+   "sott_s": "Generale China:",
+   "testo_s": "Piazza una Base e una Guerriglia in 1 Giungla di montagna."
+  },
+  {
+   "id": "K15",
+   "titolo": "Nairobi",
+   "cap": "",
+   "sott_u": "Controlli urbani:",
+   "testo_u": "I Britannici piazzano fino a 4 cubi a Nairobi e poi Rastrellamento lì.",
+   "sott_s": "Sciopero generale:",
+   "testo_s": "I Mau Mau piazzano 1 Guerriglia a Nairobi e poi Terrore gratuito lì."
+  },
+  {
+   "id": "K16",
+   "titolo": "King's African Rifles",
+   "cap": "",
+   "sott_u": "Truppe esperte:",
+   "testo_u": "I Britannici piazzano 4 Truppe in 1 spazio e fanno un'Operazione Limitata lì.",
+   "sott_s": "Abusi sulla popolazione:",
+   "testo_s": "Porta 1 Provincia con Truppe a Resistenza e piazzaci un Terrore."
+  },
+  {
+   "id": "K17",
+   "titolo": "Riserva di polizia del Kenya",
+   "cap": "",
+   "sott_u": "Polizia dei coloni:",
+   "testo_u": "Piazza 1 Polizia da ovunque (anche fuori gioco) in ogni Provincia non di Riserva.",
+   "sott_s": "Controterrore dei vigilantes:",
+   "testo_s": "Rimuovi 1 Guerriglia in ogni Provincia non di Riserva per portarla a Resistenza."
+  },
+  {
+   "id": "K18",
+   "titolo": "Operazione Blitz",
+   "cap": "",
+   "sott_u": "Rastrellamento delle aree proibite:",
+   "testo_u": "Rastrellamento britannico in 1 Giungla di montagna e poi Attacco aereo lì.",
+   "sott_s": "Le Guerriglie sgusciano via:",
+   "testo_s": "Tutte le Guerriglie nelle Giungle di montagna tornano clandestine."
+  },
+  {
+   "id": "K19",
+   "titolo": "«Striscia di un miglio»",
+   "cap": "",
+   "sott_u": "Chiudere i guerriglieri nella foresta:",
+   "testo_u": "Rimuovi 1 Base (+1 VP) da una Giungla di montagna con pezzi britannici in ogni spazio adiacente.",
+   "sott_s": "Sgomberi risentiti:",
+   "testo_s": "Porta una Provincia di Riserva a Resistenza."
+  },
+  {
+   "id": "K20",
+   "titolo": "Programmi di resa",
+   "cap": "",
+   "sott_u": "Programma «Ramo verde»:",
+   "testo_u": "Rimuovi 1 Guerriglia ciascuno da fino a 2 spazi con Guerriglie e Truppe.",
+   "sott_s": "Diffidenza e rifiuto:",
+   "testo_s": "Raduno gratuito Mau Mau in 2 spazi."
+  },
+  {
+   "id": "K21",
+   "titolo": "«Ucciso durante la fuga»",
+   "cap": "",
+   "sott_u": "I ribelli catturati parlano:",
+   "testo_u": "Assalto britannico in 1 spazio, poi attiva tutte le Guerriglie lì.",
+   "sott_s": "I morti non parlano:",
+   "testo_s": "Rimuovi 1 Guerriglia Mau Mau con Truppe per rendere clandestine tutte le Guerriglie."
+  },
+  {
+   "id": "K22",
+   "titolo": "Dedan Kimathi",
+   "cap": "",
+   "sott_u": "Processato e impiccato:",
+   "testo_u": "Rimuovi 1 Base da uno spazio a Controllo britannico (+1 VP).",
+   "sott_s": "Feldmaresciallo del KLFA:",
+   "testo_s": "I Mau Mau possono fare 2 Operazioni Limitate gratuite."
+  },
+  {
+   "id": "K23",
+   "titolo": "Sfratti di massa",
+   "cap": "",
+   "sott_u": "Cacciati dagli altopiani:",
+   "testo_u": "Porta 2 spazi non di Riserva a Lealtà. Sposta la Pipeline di 1 a destra.",
+   "sott_s": "Spinti nelle riserve:",
+   "testo_s": "Rimetti 1 Popolazione tolta dal Trasferimento, poi piazza una Guerriglia nello spazio scelto."
+  },
+  {
+   "id": "K24",
+   "titolo": "Partito laburista",
+   "cap": "",
+   "sott_u": "Spinge per le riforme:",
+   "testo_u": "Schieramento britannico, poi Ricompensa.",
+   "sott_s": "Denuncia la repressione:",
+   "testo_s": "Volontà Politica −valore della Pipeline, poi sposta la Pipeline di 1 a sinistra."
+  },
+  {
+   "id": "K25",
+   "titolo": "Inchiesta McLean",
+   "cap": "",
+   "sott_u": "Ufficiali chiamati a rispondere:",
+   "testo_u": "Volontà Politica +2 e sposta la Pipeline di 1 a sinistra.",
+   "sott_s": "Le atrocità continuano:",
+   "testo_s": "Tiro per l'Indignazione, ma Volontà Politica −2 se il risultato è minore della Pipeline."
+  },
+  {
+   "id": "K26",
+   "titolo": "Campo di detenzione di Hola",
+   "cap": "",
+   "sott_u": "Centro di detenzione brutale:",
+   "testo_u": "Rimuovi 1 Base da uno spazio con Truppe (+1 VP). Poi tiro per l'Indignazione, ma −2 VP se il risultato è minore della Pipeline. Sposta la Pipeline di 1 a destra."
+  },
+  {
+   "id": "K27",
+   "titolo": "Villaggi protetti",
+   "cap": "",
+   "sott_u": "Trasferimento rapido:",
+   "testo_u": "Sposta la Pipeline di 1 a destra, poi i Britannici possono fare un Trasferimento in fino a 2 spazi.",
+   "sott_s": "Infiltrati dai Mau Mau:",
+   "testo_s": "Rimetti 1 Popolazione tolta dal Trasferimento, poi piazza una Guerriglia nello spazio scelto."
+  },
+  {
+   "id": "K28",
+   "titolo": "Cerimonie del giuramento",
+   "cap": "ins",
+   "sott_u": "«Vomitare il giuramento»:",
+   "testo_u": "Il Giuramento non può scegliere spazi a Controllo britannico.",
+   "sott_s": "Giuramenti diffusi:",
+   "testo_s": "Il Giuramento può scegliere fino a 2 spazi popolati."
+  },
+  {
+   "id": "K29",
+   "titolo": "Lealismo kikuyu",
+   "cap": "",
+   "sott_u": "Con gli inglesi:",
+   "testo_u": "Piazza 3 Polizia da ovunque (anche fuori gioco) in Province di Riserva a Controllo britannico.",
+   "sott_s": "Presi di mira dai Mau Mau:",
+   "testo_s": "I Mau Mau possono fare Terrore gratuito in fino a 2 spazi."
+  },
+  {
+   "id": "K30",
+   "titolo": "Capi assassinati",
+   "cap": "",
+   "sott_u": "Capi popolari uccisi:",
+   "testo_u": "Porta uno spazio in Resistenza a Lealtà e piazzaci 1 Polizia Disponibile.",
+   "sott_s": "Ucciso Waruhiu wa Kungu:",
+   "testo_s": "Rimuovi 1 Polizia da uno spazio con Mau Mau per portarlo a Resistenza."
+  },
+  {
+   "id": "K31",
+   "titolo": "Esercito della Terra e della Libertà",
+   "cap": "ins",
+   "sott_u": "Affamati e disperati:",
+   "testo_u": "I Mau Mau non fanno più il Raduno gratuito nel Ridispiegamento.",
+   "sott_s": "Sfuggire agli inglesi:",
+   "testo_s": "L'Incursione può scegliere fino a 2 spazi."
+  },
+  {
+   "id": "KP1",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  },
+  {
+   "id": "KP2",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  },
+  {
+   "id": "KP3",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  },
+  {
+   "id": "KP4",
+   "titolo": "Propaganda!",
+   "propaganda": true
+  }
+ ]
+}

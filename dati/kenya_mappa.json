@@ -1,0 +1,260 @@
+{
+ "spazi": [
+  {
+   "id": "thompson",
+   "nome": "Thompson's Falls",
+   "tipo": "prov_n",
+   "x": 0.27726432532347506,
+   "y": 0.17142857142857143,
+   "adj": [
+    "rift",
+    "aberdares",
+    "nanyuki"
+   ],
+   "r": 0.0,
+   "pop": 1
+  },
+  {
+   "id": "nanyuki",
+   "nome": "Nanyuki",
+   "tipo": "prov_n",
+   "x": 0.4898336414048059,
+   "y": 0.2642857142857143,
+   "adj": [
+    "thompson",
+    "aberdares",
+    "monte_kenya",
+    "nyeri",
+    "meru"
+   ],
+   "r": 0.0,
+   "pop": 1
+  },
+  {
+   "id": "monte_kenya",
+   "nome": "Monte Kenya",
+   "tipo": "giungla",
+   "x": 0.7208872458410351,
+   "y": 0.3357142857142857,
+   "adj": [
+    "nanyuki",
+    "meru",
+    "embu",
+    "nyeri"
+   ],
+   "r": 0.0,
+   "pop": 0
+  },
+  {
+   "id": "meru",
+   "nome": "Meru",
+   "tipo": "prov_r",
+   "x": 0.878003696857671,
+   "y": 0.32142857142857145,
+   "adj": [
+    "monte_kenya",
+    "embu",
+    "nanyuki"
+   ],
+   "r": 0.0,
+   "pop": 1
+  },
+  {
+   "id": "aberdares",
+   "nome": "Aberdares",
+   "tipo": "giungla",
+   "x": 0.36506469500924216,
+   "y": 0.44285714285714284,
+   "adj": [
+    "thompson",
+    "nanyuki",
+    "rift",
+    "nyeri",
+    "fort_hall",
+    "kiambu"
+   ],
+   "r": 0.0,
+   "pop": 0
+  },
+  {
+   "id": "rift",
+   "nome": "Rift Valley",
+   "tipo": "prov_n",
+   "x": 0.21719038817005545,
+   "y": 0.525,
+   "adj": [
+    "thompson",
+    "aberdares",
+    "kiambu"
+   ],
+   "r": 0.0,
+   "pop": 1
+  },
+  {
+   "id": "nyeri",
+   "nome": "Nyeri",
+   "tipo": "prov_r",
+   "x": 0.5360443622920518,
+   "y": 0.45714285714285713,
+   "adj": [
+    "aberdares",
+    "nanyuki",
+    "monte_kenya",
+    "embu",
+    "fort_hall"
+   ],
+   "r": 0.0,
+   "pop": 2
+  },
+  {
+   "id": "embu",
+   "nome": "Embu",
+   "tipo": "prov_r",
+   "x": 0.8040665434380776,
+   "y": 0.5214285714285715,
+   "adj": [
+    "monte_kenya",
+    "meru",
+    "nyeri",
+    "fort_hall",
+    "thika"
+   ],
+   "r": 0.0,
+   "pop": 1
+  },
+  {
+   "id": "fort_hall",
+   "nome": "Fort Hall",
+   "tipo": "prov_r",
+   "x": 0.5406654343807763,
+   "y": 0.5785714285714286,
+   "adj": [
+    "nyeri",
+    "aberdares",
+    "embu",
+    "kiambu",
+    "thika"
+   ],
+   "r": 0.0,
+   "pop": 2
+  },
+  {
+   "id": "kiambu",
+   "nome": "Kiambu",
+   "tipo": "prov_r",
+   "x": 0.41589648798521256,
+   "y": 0.7035714285714286,
+   "adj": [
+    "aberdares",
+    "rift",
+    "fort_hall",
+    "thika",
+    "nairobi"
+   ],
+   "r": 0.0,
+   "pop": 2
+  },
+  {
+   "id": "thika",
+   "nome": "Thika",
+   "tipo": "prov_n",
+   "x": 0.6469500924214417,
+   "y": 0.6857142857142857,
+   "adj": [
+    "fort_hall",
+    "embu",
+    "kiambu",
+    "nairobi"
+   ],
+   "r": 0.0,
+   "pop": 1
+  },
+  {
+   "id": "nairobi",
+   "nome": "Nairobi",
+   "tipo": "nairobi",
+   "x": 0.4436229205175601,
+   "y": 0.7714285714285715,
+   "adj": [
+    "kiambu",
+    "thika"
+   ],
+   "r": 0.066543438077634,
+   "pop": 2
+  }
+ ],
+ "pw_track": {
+  "x0": 0.0711645101663586,
+  "y0": 0.9464285714285714,
+  "dx": 0,
+  "dy": -0.04442857142857143,
+  "max": 20
+ },
+ "setup": {
+  "pw": 12,
+  "pipeline": 1,
+  "primo": "ins",
+  "ris": {
+   "brit": 0,
+   "ins": 8
+  },
+  "disp": {
+   "t": 4,
+   "p": 0,
+   "g": 7,
+   "b": 1
+  },
+  "fuori": 8,
+  "spazi": {
+   "nairobi": {
+    "b": 1,
+    "g": 1,
+    "t": 2,
+    "p": 3
+   },
+   "kiambu": {
+    "g": 1
+   },
+   "fort_hall": {
+    "g": 1
+   },
+   "nyeri": {
+    "g": 1
+   },
+   "embu": {
+    "g": 1
+   },
+   "meru": {
+    "g": 1
+   },
+   "aberdares": {
+    "b": 1,
+    "g": 1
+   },
+   "monte_kenya": {
+    "b": 1,
+    "g": 1
+   },
+   "rift": {
+    "t": 2,
+    "p": 1
+   },
+   "nanyuki": {
+    "t": 2,
+    "p": 1
+   },
+   "thompson": {
+    "p": 1
+   },
+   "thika": {
+    "p": 1
+   }
+  }
+ },
+ "pezzi": {
+  "t": 10,
+  "p": 15,
+  "g": 15,
+  "b": 4
+ }
+}
