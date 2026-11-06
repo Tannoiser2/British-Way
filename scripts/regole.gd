@@ -73,6 +73,36 @@ const DESC_OP := {
 }
 
 
+const DESC_SA := {
+	"restore": "Con lo Schieramento: in 1 spazio con Truppe, Polizia e niente insorti toglie Coprifuoco e Sabotaggi.",
+	"negotiate": "Dado (+1 per Terrore): se supera l'Haganah, la sposta a sinistra; a 0 dà 1 Intel.",
+	"detention": "In 1 Città con Coprifuoco e 3 Truppe: un dado di Cellule in Prigione (Città e Distretto); l'eccesso costa VP.",
+	"silence": "In 1 spazio con almeno tante Cellule clandestine quanta Polizia: rimuove 1 Polizia.",
+	"propagandize": "Palestina: fino a 2 Città con Cellula e Coprifuoco, −1 VP ciascuna. Cipro: 1 spazio con Cellula e Sabotaggio (−1 VP) o Coprifuoco (Opinione +2).",
+	"terror": "In 1 Città del Sabotaggio: Terrore invece di Sabotaggio; con 6 o più, 2 Terrori e l'Haganah scende.",
+	"diplomacy": "Opinione internazionale −1 (se più di 3 Città hanno Sabotaggi o Coprifuochi serve un dado maggiore dell'Opinione).",
+	"interrogate": "1 Intel ogni 2 Cellule in Prigione.",
+	"smuggle": "Piazza un Deposito dove c'è una Cellula e niente cubi, o spostalo tra spazi adiacenti con Cellule (non a Opinione 0; 2 a Opinione 4).",
+	"infiltrate": "In 1 spazio con Polizia e almeno altrettante Cellule clandestine: sostituisce 1 Polizia con 1 Cellula e scarta l'Intel più alto.",
+	"resettle": "Con l'Addestramento: Nuovo Villaggio in 1 Provincia a Controllo britannico, che si sposta verso l'Opposizione.",
+	"reprisal": "Spazio con Truppe a Neutrale, Terrore, 1 Guerriglia spostata in uno spazio adiacente.",
+	"airstrike": "Rimuove Guerriglie attive (Malesia: 1 in fino a 2 Province con forze britanniche; Kenya: 1, o 2 in una Giungla).",
+	"extort": "Fino a 2 spazi con Guerriglia clandestina e senza Nuovo Villaggio: attiva 1 Guerriglia, +1 Risorsa.",
+	"intimidate": "Fino a 2 spazi con Guerriglia clandestina: rimuove 1 Polizia, o il Nuovo Villaggio e il Supporto.",
+	"ambush": "In 1 spazio dell'Attacco: successo sicuro, attiva 1 sola Guerriglia, rimuove 1 cubo.",
+	"reward": "1 spazio popolato a Controllo britannico: toglie 1 Terrore e sposta verso la Lealtà.",
+	"supply": "+1 Risorsa per Base a Nairobi o collegata a Nairobi da spazi con Guerriglie o Resistenza.",
+	"oath": "1 Provincia di Riserva popolata con Guerriglia clandestina: +1 Guerriglia e verso la Resistenza.",
+	"raid": "Provincia vicina a una Giungla: entra con 1-2 Guerriglie e fai un'Operazione Limitata gratuita, o ritirati nella giungla.",
+}
+
+
+func descrizione(id: String) -> String:
+	if DESC_OP.get(gioco(), {}).has(id):
+		return DESC_OP[gioco()][id]
+	return DESC_SA.get(id, "")
+
+
 func nome_op(id: String) -> String:
 	return NOMI_OP.get(id, id)
 
@@ -495,7 +525,7 @@ func assalto_in(f: String, id: String, p: Dictionary = {}) -> void:
 	while tolti < capn and gue(id) == 0 and int(X(id)["b"]) > 0:
 		rimuovi(id, "b", 1)
 		tolti += 1
-		nota("%s rimosso da %s." % [nome_pezzo("b"), nome_sp(id)])
+		nota("%s %s da %s." % [nome_pezzo("b"), "rimosso" if cellule() else "rimossa", nome_sp(id)])
 		if cellule():
 			var doppio = gioco() == "palestina" and cap("P25") == "u"
 			cambia_pw(2 if doppio else 1, "Deposito d'armi rimosso")

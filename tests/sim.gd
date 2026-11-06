@@ -8,6 +8,7 @@ func _init() -> void:
 		giochi = [args[0]]
 	var n := int(args[1]) if args.size() > 1 else 1
 	var nsim := int(args[2]) if args.size() > 2 else 6
+	var nsim_ins := int(args[3]) if args.size() > 3 else nsim
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 12345
 	var esiti := {}
@@ -31,7 +32,7 @@ func _init() -> void:
 						push_error("atto bloccato: %s" % str(m.need))
 						m.fine_partita("pareggio", "bloccato")
 						break
-					var v = IA.rispondi(base, ans, m.need, piano, rng, nsim)
+					var v = IA.rispondi(base, ans, m.need, piano, rng, nsim if m.need["f"] == "brit" else nsim_ins)
 					ans.append(v)
 				atti += 1
 			var fine: Dictionary = m.s["fine"]

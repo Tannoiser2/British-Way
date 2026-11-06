@@ -10,7 +10,8 @@ func evento(f: String, cd: Dictionary) -> void:
 		lato = chiedi(f, "Quale testo dell'Evento %s?" % cd["titolo"], [o("u", "Chiaro: " + str(cd.get("sott_u", ""))), o("s", "Ombreggiato: " + str(cd.get("sott_s", "")))], {"tag": "ev_lato", "mostra": true})
 		if ferma():
 			return
-	nota("%s: Evento «%s» (%s)." % [nome_faz(f), cd["titolo"], "testo chiaro" if lato == "u" else "testo ombreggiato"])
+	var tit: String = cd["titolo"]
+	nota("%s: Evento %s (%s)." % [nome_faz(f), tit if tit.begins_with("«") else "«" + tit + "»", "testo chiaro" if lato == "u" else "testo ombreggiato"])
 	if str(cd.get("cap", "")) != "":
 		s["cap"][id] = "d" if cd["cap"] == "dual" else lato
 		nota("Capacità attiva per il resto della partita.")
@@ -62,7 +63,7 @@ func rimuovi_scelta(f: String, n: int, k: String, filtro: Callable, testo: Strin
 			conta[sp] = int(conta.get(sp, 0)) + 1
 			fatti += 1
 			if k == "b":
-				nota("%s rimosso da %s." % [nome_pezzo("b"), nome_sp(sp)])
+				nota("%s %s da %s." % [nome_pezzo("b"), "rimosso" if cellule() else "rimossa", nome_sp(sp)])
 	if fatti and k != "b":
 		nota("Rimoss%s %s." % ["a" if fatti == 1 else "e", pz(fatti, k)])
 	return fatti

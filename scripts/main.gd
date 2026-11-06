@@ -24,7 +24,7 @@ var registro_fisso: Array = []
 var storia: Array = []        # istantanee per "Annulla": [n_atti, ans]
 var occupato := false
 var ia_in_corso := false
-var ia_forza := 34
+var ia_forza := 200
 var rete: Rete
 var online := false
 var stanza := ""
@@ -829,6 +829,8 @@ func _mostra_domanda(chi: String) -> void:
 		if str(o["t"]).length() > 22:
 			lunghe = true
 	box_opz.columns = 1 if lunghe else (6 if num else 2)
+	if str(q.get("x", {}).get("tag", "")) in ["op", "sa"]:
+		box_opz.columns = 1
 	for o in opzioni:
 		var v = o["v"]
 		if spazi and v is String and m.SP.has(v):
@@ -843,6 +845,15 @@ func _mostra_domanda(chi: String) -> void:
 		Tema.tasto_carta(b, not passivo and not num and not spazi, Tema.FAZ[f])
 		b.pressed.connect(rispondi.bind(v))
 		box_opz.add_child(b)
+		var tag: String = str(q.get("x", {}).get("tag", ""))
+		if tag in ["op", "sa"] and v is String:
+			var dsc: String = m.descrizione(v)
+			if dsc != "":
+				b.tooltip_text = dsc
+				var dl := _lbl_carta(dsc, 14)
+				dl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				dl.add_theme_color_override("font_color", Tema.INK_DIM)
+				box_opz.add_child(dl)
 	if spazi:
 		var h := _lbl_carta("Clicca uno spazio evidenziato sulla mappa (%d possibili)." % mappa.candidati.size(), 16)
 		h.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
