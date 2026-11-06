@@ -197,6 +197,7 @@ func _costruisci_menu() -> void:
 	bl.custom_minimum_size = Vector2(0, 40)
 	Tema.tasto_carta(bl)
 	bl.pressed.connect(_riprendi_locale)
+	bl.set_meta("riprendi", "locale")
 	r2.add_child(bl)
 	var bc := Button.new()
 	bc.text = "Riprendi dal salvataggio online (Firebase)"
@@ -204,6 +205,7 @@ func _costruisci_menu() -> void:
 	bc.custom_minimum_size = Vector2(0, 40)
 	Tema.tasto_carta(bc)
 	bc.pressed.connect(_riprendi_cloud)
+	bc.set_meta("riprendi", "cloud")
 	r2.add_child(bc)
 	var lunga := CheckBox.new()
 	lunga.text = "Malesia: scenario esteso (mazzo di 27 carte)"
@@ -286,6 +288,13 @@ func _seleziona_gioco(g: String) -> void:
 
 func _aggiorna_tasti_menu() -> void:
 	for b in menu.find_children("*", "Button", true, false):
+		if b.has_meta("riprendi"):
+			var nome: String = GIOCHI[gioco_id]["nome"]
+			if b.get_meta("riprendi") == "locale":
+				b.text = "Riprendi %s salvata su questo dispositivo%s" % [nome, "" if FileAccess.file_exists(_file_salva(gioco_id)) else " (nessuna)"]
+				b.disabled = not FileAccess.file_exists(_file_salva(gioco_id))
+			else:
+				b.text = "Riprendi %s dal salvataggio online (Firebase)" % nome
 		if b.has_meta("ins_btn"):
 			b.text = "Gioca con %s contro l'IA" % ("l'" + GIOCHI[gioco_id]["ins"] if GIOCHI[gioco_id]["ins"] in ["Irgun", "EOKA", "MCP"] else "i " + GIOCHI[gioco_id]["ins"])
 
@@ -1008,6 +1017,7 @@ func _torna_menu() -> void:
 	partita.visible = false
 	menu.visible = true
 	m = null
+	_aggiorna_tasti_menu()
 
 
 func _process(delta: float) -> void:
@@ -1024,23 +1034,30 @@ func _dati_salvataggio() -> Dictionary:
 	return {"gioco": gioco_id, "seme": seme, "opz": opz, "atti": atti, "ans": ans, "controllo": controllo, "v": 1}
 
 
+func _file_salva(g: String) -> String:
+	return "user://britishway_%s.json" % g
+
+
 func _salva_locale() -> void:
 	if online or m == null:
 		return
-	var f := FileAccess.open("user://britishway_partita.json", FileAccess.WRITE)
+	var f := FileAccess.open(_file_salva(gioco_id), FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify(_dati_salvataggio()))
+	# ogni 4 atti anche su Firebase (in silenzio)
+	if atti.size() % 4 == 0:
+		_salva_cloud(true)
 
 
 func _cancella_locale() -> void:
-	if FileAccess.file_exists("user://britishway_partita.json"):
-		DirAccess.remove_absolute("user://britishway_partita.json")
+	if FileAccess.file_exists(_file_salva(gioco_id)):
+		DirAccess.remove_absolute(_file_salva(gioco_id))
 
 
 func _riprendi_locale() -> void:
-	var f := FileAccess.open("user://britishway_partita.json", FileAccess.READ)
+	var f := FileAccess.open(_file_salva(gioco_id), FileAccess.READ)
 	if f == null:
-		menu_msg.text = "Nessuna partita salvata su questo dispositivo."
+		menu_msg.text = "Nessuna partita di %s salvata su questo dispositivo." % GIOCHI[gioco_id]["nome"]
 		return
 	var d = JSON.parse_string(f.get_as_text())
 	if not (d is Dictionary):
@@ -1055,21 +1072,37 @@ func _carica(d: Dictionary) -> void:
 	avvia(str(d["gioco"]), int(d["seme"]), d.get("opz", {}), d.get("atti", []), [])
 
 
-func _salva_cloud() -> void:
-	if online or m == null:
+var _cloud_occupato := false
+
+
+## Su Firebase c'è un salvataggio per giocatore: vi teniamo una partita per ciascuno dei quattro giochi.
+func _salva_cloud(silenzioso: bool = false) -> void:
+	if online or m == null or _cloud_occupato:
 		return
-	info_lbl.text = "Salvataggio online in corso…"
-	var ok = await rete.salva_partita(_dati_salvataggio())
-	info_lbl.text = "Partita salvata online." if ok else "Salvataggio online non riuscito: " + rete.last_error
+	_cloud_occupato = true
+	if not silenzioso:
+		info_lbl.text = "Salvataggio online in corso…"
+	var tutti = await rete.carica_partita()
+	if not (tutti is Dictionary) or tutti.has("gioco"):
+		tutti = {}
+	tutti[gioco_id] = _dati_salvataggio()
+	tutti[gioco_id]["quando"] = Time.get_datetime_string_from_system()
+	var ok = await rete.salva_partita(tutti)
+	_cloud_occupato = false
+	if not silenzioso:
+		info_lbl.text = "Partita salvata online." if ok else "Salvataggio online non riuscito: " + rete.last_error
 
 
 func _riprendi_cloud() -> void:
 	menu_msg.text = "Carico il salvataggio online…"
 	var d = await rete.carica_partita()
-	if d.is_empty() or not d.has("gioco"):
-		menu_msg.text = "Nessun salvataggio online trovato." + ("" if rete.last_error == "" else " (" + rete.last_error + ")")
+	if d is Dictionary and d.has("gioco"):
+		_carica(d)
 		return
-	_carica(d)
+	if not (d is Dictionary) or not d.has(gioco_id):
+		menu_msg.text = "Nessuna partita di %s salvata online." % GIOCHI[gioco_id]["nome"] + ("" if rete.last_error == "" else " (" + rete.last_error + ")")
+		return
+	_carica(d[gioco_id])
 
 
 # ================================================================ ONLINE
