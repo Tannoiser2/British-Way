@@ -1,6 +1,6 @@
 ## Motore completo (regole + eventi) con la valutazione delle posizioni usata dall'IA.
 class_name Motore
-extends Eventi
+extends Campagna
 
 
 # ---------------------------------------------------------------- stima della Propaganda (senza effetti)
@@ -167,4 +167,8 @@ func valuta_brit() -> float:
 
 func valuta(f: String) -> float:
 	var v := valuta_brit()
+	if in_campagna() and not finita():
+		v += stima_prestigio() * 12.0
+	elif in_campagna():
+		v += float(s["camp"]["prestigio"]) * 12.0
 	return v if f == "brit" else -v

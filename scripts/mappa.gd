@@ -37,6 +37,10 @@ func _ready() -> void:
 
 func imposta(motore: Motore) -> void:
 	m = motore
+	ultimo_cambiato.clear()
+	candidati = []
+	selezionati = []
+	sopra = ""
 	tex = load("res://assets/mappe/%s.webp" % m.gioco())
 	_pronto = false
 	adatta()

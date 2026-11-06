@@ -1,0 +1,130 @@
+{
+ "eventi_campagna": [
+  {
+   "id": "E1",
+   "titolo": "Spartizione",
+   "sott": "Migrazioni di massa e violenza:",
+   "testo": "Prestigio imperiale −3. I Britannici possono mettere fino a 4 Truppe su questa carta: ogni 2 Truppe la perdita cala di 1. Le Truppe tornano a Kuala Lumpur o in una Città qualsiasi al prossimo Reset.",
+   "periodo": "early"
+  },
+  {
+   "id": "E2",
+   "titolo": "Birmania",
+   "sott": "Transizione caotica:",
+   "testo": "I Britannici possono mettere fino a 3 Truppe su questa carta, poi tirano un dado: se il risultato non supera le Truppe sulla carta, Prestigio imperiale +1, altrimenti −2. Le Truppe tornano in una Città al prossimo Reset.",
+   "periodo": "early"
+  },
+  {
+   "id": "E3",
+   "titolo": "Costa d'Oro",
+   "sott": "Proteste e disordini:",
+   "testo": "I Britannici scelgono: Prestigio imperiale −1, oppure 2 Truppe su questa carta e un dado: con 1-4 Prestigio +1, con 5-6 Prestigio −2. Le Truppe tornano in una Città al prossimo Reset.",
+   "periodo": "early"
+  },
+  {
+   "id": "E4",
+   "titolo": "Crisi della Guerra fredda!",
+   "sott": "Valore strategico delle basi (Palestina):",
+   "testo": "Volontà Politica +2 e Prestigio imperiale +1. Contenere il comunismo (Malesia): se le Risorse britanniche sono a 20, Prestigio imperiale +1; altrimenti portale a 20.",
+   "periodo": "early"
+  },
+  {
+   "id": "E5",
+   "titolo": "«Gangster, teppisti e banditi»",
+   "sott": "Delegittimare l'avversario:",
+   "testo": "Palestina: i Britannici possono Perquisire 1 spazio e fare lì una Detenzione di massa, poi l'Irgun può Rapinare in 1 spazio. Malesia: i Britannici possono fare Rappresaglia in 1 spazio, poi l'MCP può fare Estorsione in 2 spazi.",
+   "periodo": "early"
+  },
+  {
+   "id": "E6",
+   "titolo": "Guerra sporca",
+   "sott": "Violenza illegale:",
+   "testo": "I Britannici possono ridurre il Prestigio imperiale di 1 per rimuovere fino a 3 Cellule o Guerriglie da spazi con più pezzi britannici che nemici (in Malesia: Terrore in ogni spazio scelto).",
+   "periodo": "early"
+  },
+  {
+   "id": "E7",
+   "titolo": "Stanchezza della guerra",
+   "sott": "Risorse allo stremo:",
+   "testo": "Palestina: fino al prossimo Reset le Operazioni britanniche scelgono al massimo 2 spazi. Malesia: i Britannici devono piazzare un Sabotaggio in uno dei Centri economici.",
+   "periodo": "early"
+  },
+  {
+   "id": "E8",
+   "titolo": "Nazioni Unite",
+   "sott": "Si riunisce l'Assemblea generale:",
+   "testo": "Alla prossima fase di Volontà Politica: Palestina, Prestigio −1 se c'è più di 1 Coprifuoco sulla mappa; Malesia, Prestigio −1 se c'è più Popolazione in Opposizione che a Supporto.",
+   "periodo": "early"
+  },
+  {
+   "id": "E9",
+   "titolo": "Relazione speciale",
+   "sott": "Influenza americana:",
+   "testo": "Palestina: fino al prossimo Reset la Propaganda dell'Irgun toglie 2 VP per spazio. Malesia: nella prossima fase di Supporto la Pacificazione britannica non costa Risorse.",
+   "periodo": "early"
+  },
+  {
+   "id": "E10",
+   "titolo": "Nyasaland",
+   "sott": "Dichiarata l'Emergenza:",
+   "testo": "I Britannici scelgono: Prestigio imperiale −1, oppure 2 Truppe su questa carta e un dado: con 1-4 Prestigio +1, con 5-6 Prestigio −2. Le Truppe tornano a Nairobi o in una Base britannica al prossimo Reset.",
+   "periodo": "late"
+  },
+  {
+   "id": "E11",
+   "titolo": "Zona del Canale",
+   "sott": "Violenza di basso livello:",
+   "testo": "I Britannici scelgono: Prestigio imperiale −2, oppure togliere per sempre 2 Truppe da questa partita e Prestigio −1.",
+   "periodo": "late"
+  },
+  {
+   "id": "E12",
+   "titolo": "Operazione Musketeer",
+   "sott": "Ultimo azzardo:",
+   "testo": "I Britannici scelgono: Prestigio imperiale −1, oppure entrambi tirano un dado: se il britannico è più alto, Prestigio +2, altrimenti Prestigio meno la differenza.",
+   "periodo": "late"
+  },
+  {
+   "id": "E13",
+   "titolo": "Guerra civile locale",
+   "sott": "Guerra civile kikuyu (Kenya):",
+   "testo": "I Britannici possono piazzare 1 Polizia fuori gioco in ciascuno di 2 spazi a Controllo britannico con Guerriglie. Scontri tra comunità (Cipro): l'EOKA può piazzare un Sabotaggio in 1 spazio con Cellule e Polizia.",
+   "periodo": "late"
+  },
+  {
+   "id": "E14",
+   "titolo": "Lezioni apprese",
+   "sott": "Il successo ispira gli altri:",
+   "testo": "Se la partita precedente è finita con Influenza o Uscita, i Britannici fanno 2 Operazioni Limitate gratuite e poi gli insorti 1; con Abbandono o Resa, il contrario.",
+   "periodo": "late"
+  },
+  {
+   "id": "E15",
+   "titolo": "Operazione Legacy",
+   "sott": "Documenti sulle atrocità distrutti:",
+   "testo": "Kenya: nessun tiro per l'Indignazione fino al prossimo Reset. Cipro: alla prossima fase di Volontà Politica si toglie solo metà dell'Opinione internazionale (per difetto).",
+   "periodo": "late"
+  },
+  {
+   "id": "E16",
+   "titolo": "Convenzione dei diritti umani",
+   "sott": "Condanna della repressione:",
+   "testo": "Alla prossima fase di Volontà Politica: Kenya, Prestigio −1 se la Pipeline è oltre 2; Cipro, Prestigio −1 se ci sono più di 2 Coprifuochi sulla mappa.",
+   "periodo": "late"
+  },
+  {
+   "id": "E17",
+   "titolo": "Partito conservatore",
+   "sott": "Pressione dei deputati:",
+   "testo": "Alla prossima fase di Volontà Politica, dopo averla aggiornata: Kenya, Prestigio +1 se la Volontà Politica è oltre 10; Cipro, Prestigio +1 se è oltre 5.",
+   "periodo": "late"
+  },
+  {
+   "id": "E18",
+   "titolo": "Movimento per la libertà coloniale",
+   "sott": "Campagna contro l'Impero:",
+   "testo": "Alla prossima fase di Volontà Politica, dopo averla aggiornata: Kenya, Prestigio −1 se la Volontà Politica è sotto 10; Cipro, Prestigio −1 se è sotto 5.",
+   "periodo": "late"
+  }
+ ]
+}

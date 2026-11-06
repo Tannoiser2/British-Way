@@ -169,6 +169,8 @@ func max_spazi(f: String, limitata: bool) -> int:
 			n = 2
 		if f == "brit" and s["tmp"].get("loans", false):
 			n = 4
+		if f == "brit" and (s.get("camp", {}) as Dictionary).get("attivi", {}).has("E7"):
+			n = min(n, 2)
 		if gioco() == "palestina" and f == "ins" and haganah_extra():
 			n += 1
 		return n
@@ -744,6 +746,8 @@ func sa_possibile(f: String, id: String, op: String) -> bool:
 		"restore":
 			return ordine.any(func(x): return _restore_ok(x))
 		"negotiate", "diplomacy", "interrogate", "terror", "ambush", "supply", "airstrike":
+			if id == "terror" and gioco() == "palestina" and int((s.get("camp", {}) as Dictionary).get("prewar", 0)) == 6 and int(s["haganah"]) >= 3:
+				return false
 			if id == "airstrike":
 				return ordine.any(func(x): return _airstrike_ok(x))
 			return true
@@ -861,7 +865,8 @@ func sa_propagandize(f: String, p: Dictionary) -> void:
 		if int(X(sp)["a"]) == 0 and int(X(sp)["u"]) > 0:
 			attiva(sp, 1)
 		if gioco() == "palestina":
-			cambia_pw(-2 if cap("P25") == "s" else -1, "Propaganda a " + nome_sp(sp))
+			var e9: bool = (s.get("camp", {}) as Dictionary).get("attivi", {}).has("E9")
+			cambia_pw(-2 if cap("P25") == "s" or e9 else -1, "Propaganda a " + nome_sp(sp))
 		else:
 			var scelta = "sab" if int(X(sp)["sab"]) > 0 else "cf"
 			if int(X(sp)["sab"]) > 0 and int(X(sp)["cf"]) > 0:
@@ -1108,6 +1113,8 @@ func _pacify_ok(id: String) -> bool:
 
 func pacifica(f: String, quante: int, tra: Array = []) -> void:
 	var costo = 3 if cap("M28") == "s" else 2
+	if s["tmp"].get("pacifica_gratis", false):
+		costo = 0
 	var fatti: Array = []
 	for k in quante:
 		var sp = scegli_spazio(f, "Pacificazione (%d Risorse per passo): scegli uno spazio" % costo, func(x): return not (x in fatti) and (tra.is_empty() or x in tra) and _pacify_ok(x) and (int(X(x)["ter"]) > 0 or int(X(x)["sup"]) < 1) and int(s["ris"]["brit"]) >= costo, true, "pacify", "Nessuna Pacificazione")
@@ -1243,6 +1250,9 @@ func limite_reprisal() -> int:
 func indignazione(forzata_due: bool = false) -> void:
 	var pl := int(s["pipeline"])
 	if pl <= 1 and not forzata_due:
+		return
+	if (s.get("camp", {}) as Dictionary).get("attivi", {}).has("E15"):
+		nota("Operazione Legacy: nessun tiro per l'Indignazione.")
 		return
 	var d := dado()
 	nota("Tiro per l'Indignazione: %d contro Pipeline %d." % [d, pl])

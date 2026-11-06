@@ -136,6 +136,10 @@ func nuova(gioco_id: String, seme: int, opzioni: Dictionary = {}) -> void:
 	s["primo"] = st["primo"]
 	s["scelte"] = {}
 	s["carta"] = ""
+	s["camp"] = {}
+	s["esclusi"] = []
+	if opzioni.has("campagna"):
+		_prepara_campagna(opzioni["campagna"])
 	s["mazzo"] = _costruisci_mazzo(opzioni.get("lungo", false))
 	s["giocate"] = []
 	s["prop_fatte"] = 0
@@ -145,6 +149,8 @@ func nuova(gioco_id: String, seme: int, opzioni: Dictionary = {}) -> void:
 	for id in ordine:
 		_aggiorna_controllo(id, false)
 	_pesca_carta()
+	if not (s["camp"] as Dictionary).is_empty():
+		s["coda"].insert(0, {"t": "camp", "f": "brit", "passo": "inizio"})
 
 
 func _rand(n: int) -> int:
@@ -172,6 +178,8 @@ func _costruisci_mazzo(lungo: bool) -> Array:
 	for c in D.get("carte", []):
 		if c.get("propaganda", false):
 			prop.append(c["id"])
+		elif c["id"] in s.get("esclusi", []):
+			continue
 		else:
 			eventi.append(c["id"])
 	eventi = _mescola(eventi)
@@ -655,6 +663,8 @@ func _esegui_atto(a: Dictionary) -> void:
 				accoda([{"t": "turno", "f": altra(a["f"])}])
 		"prop":
 			call("prop_" + a["passo"])
+		"camp":
+			call("camp_" + a["passo"], a)
 		_:
 			if has_method("atto_" + a["t"]):
 				call("atto_" + a["t"], a)
@@ -742,6 +752,10 @@ func operazione(_f: String, _limitata: bool, _con_sa: bool) -> void:
 
 
 func evento(_f: String, _cd: Dictionary) -> void:
+	pass
+
+
+func _prepara_campagna(_c: Dictionary) -> void:
 	pass
 
 

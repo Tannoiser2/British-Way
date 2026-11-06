@@ -41,6 +41,8 @@ func prop_inizio() -> void:
 				righe.append("Città senza Sabotaggi né Terrore: +%d" % citta_pulite)
 		"cipro":
 			var op := int(s["opinione"])
+			if (s.get("camp", {}) as Dictionary).get("attivi", {}).has("E15"):
+				op = op / 2
 			d -= op
 			if op:
 				righe.append("Pressione internazionale: −%d" % op)
@@ -114,6 +116,7 @@ func prop_inizio() -> void:
 	if d == 0:
 		nota("Volontà Politica invariata (%d)." % int(s["pw"]))
 	cambia_pw(d, "Propaganda")
+	call("camp_fase_pw")
 	var pw := int(s["pw"])
 	if cellule():
 		if pw <= 0:
@@ -295,7 +298,14 @@ func prop_mal_risorse() -> void:
 
 
 func prop_mal_pacify() -> void:
+	var gratis: bool = (s.get("camp", {}) as Dictionary).get("attivi", {}).get("E9", "") == "supporto"
+	if gratis:
+		s["tmp"]["pacifica_gratis"] = true
+		nota("Relazione speciale: la Pacificazione non costa Risorse.")
 	pacifica("brit", 2)
+	s["tmp"].erase("pacifica_gratis")
+	if gratis and not ferma():
+		s["camp"]["attivi"].erase("E9")
 
 
 func prop_mal_agitate() -> void:
@@ -423,6 +433,7 @@ func prop_reset() -> void:
 	nota("Reset: segnalini rimossi, %s clandestine." % nome_pezzo("g", 2))
 	if s["tmp"].has("suez_rientro"):
 		accoda([_a("brit", "suez")])
+	call("camp_fine_reset")
 
 
 func prop_suez() -> void:

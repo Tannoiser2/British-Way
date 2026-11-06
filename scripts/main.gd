@@ -64,6 +64,9 @@ var menu_msg: Label
 var nome_edit: LineEdit
 var codice_edit: LineEdit
 var sel_gioco_btns: Dictionary = {}
+var campagna: Dictionary = {}       # campagna End of Empire in corso (vuoto = partita singola)
+var camp_prewar := true
+var camp_lbl: Label
 
 
 func _ready() -> void:
@@ -77,6 +80,7 @@ func _ready() -> void:
 	partita.visible = false
 	menu.visible = true
 	_seleziona_gioco("palestina")
+	_aggiorna_menu_campagna()
 
 
 # ================================================================ MENU
@@ -216,6 +220,52 @@ func _costruisci_menu() -> void:
 	lunga.add_theme_color_override("font_hover_color", Tema.NAVY)
 	lunga.add_theme_color_override("font_pressed_color", Tema.INK)
 	pv.add_child(lunga)
+	pv.add_child(_lbl_carta("Campagna «End of Empire»: le quattro partite in fila", 26, true))
+	var cd := _lbl_carta("Palestina, Malesia, Kenya e Cipro una dopo l'altra: il Prestigio imperiale (si parte da 13) sale o scende con l'esito di ogni partita e con gli eventi di campagna; dopo la prima Propaganda i Britannici scelgono la Politica coloniale. Alla fine di Cipro: 11-15 Ritirata ordinata (vittoria britannica), 5-10 Vento del cambiamento, 0-4 Fuga dalle colonie (vittoria degli insorti).", 15)
+	cd.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	cd.add_theme_color_override("font_color", Tema.INK_DIM)
+	pv.add_child(cd)
+	var rc := HBoxContainer.new()
+	rc.add_theme_constant_override("separation", 10)
+	pv.add_child(rc)
+	for k in [["brit", "Nuova campagna: io Britannici contro l'IA"], ["ins", "Nuova campagna: io insorti contro l'IA"], ["hotseat", "Nuova campagna in due"]]:
+		var b := Button.new()
+		b.text = k[1]
+		b.custom_minimum_size = Vector2(0, 44)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		Tema.tasto_carta(b, k[0] != "hotseat", Tema.NAVY if k[0] == "brit" else Tema.RED)
+		b.pressed.connect(_nuova_campagna.bind(k[0]))
+		rc.add_child(b)
+	var rc2 := HBoxContainer.new()
+	rc2.add_theme_constant_override("separation", 10)
+	pv.add_child(rc2)
+	var pw := CheckBox.new()
+	pw.text = "Tabelle pre-belliche (tiro casuale)"
+	pw.button_pressed = true
+	pw.add_theme_color_override("font_color", Tema.INK)
+	for sty in ["normal", "hover", "pressed", "hover_pressed", "focus"]:
+		pw.add_theme_stylebox_override(sty, StyleBoxEmpty.new())
+	pw.add_theme_color_override("font_hover_color", Tema.NAVY)
+	pw.add_theme_color_override("font_pressed_color", Tema.INK)
+	pw.toggled.connect(func(v): camp_prewar = v)
+	rc2.add_child(pw)
+	var bcl := Button.new()
+	bcl.text = "Riprendi la campagna"
+	bcl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bcl.custom_minimum_size = Vector2(0, 40)
+	Tema.tasto_carta(bcl)
+	bcl.pressed.connect(_riprendi_campagna.bind(false))
+	rc2.add_child(bcl)
+	var bcc := Button.new()
+	bcc.text = "Riprendi la campagna salvata online"
+	bcc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bcc.custom_minimum_size = Vector2(0, 40)
+	Tema.tasto_carta(bcc)
+	bcc.pressed.connect(_riprendi_campagna.bind(true))
+	rc2.add_child(bcc)
+	camp_lbl = _lbl_carta("", 15)
+	camp_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	pv.add_child(camp_lbl)
 	pv.add_child(_lbl_carta("Partita online", 26, true))
 	var r3 := HBoxContainer.new()
 	r3.add_theme_constant_override("separation", 10)
@@ -299,7 +349,19 @@ func _aggiorna_tasti_menu() -> void:
 			b.text = "Gioca con %s contro l'IA" % ("l'" + GIOCHI[gioco_id]["ins"] if GIOCHI[gioco_id]["ins"] in ["Irgun", "EOKA", "MCP"] else "i " + GIOCHI[gioco_id]["ins"])
 
 
+func _controllo_da_modo(modo: String) -> Dictionary:
+	match modo:
+		"brit":
+			return {"brit": "umano", "ins": "ia"}
+		"ins":
+			return {"brit": "ia", "ins": "umano"}
+		"demo":
+			return {"brit": "ia", "ins": "ia"}
+	return {"brit": "umano", "ins": "umano"}
+
+
 func _nuova_locale(modo: String) -> void:
+	campagna = {}
 	match modo:
 		"brit":
 			controllo = {"brit": "umano", "ins": "ia"}
@@ -505,7 +567,7 @@ func _costruisci_partita() -> void:
 	fine_dlg = AcceptDialog.new()
 	fine_dlg.title = "Fine della partita"
 	fine_dlg.ok_button_text = "Torna al menu"
-	fine_dlg.confirmed.connect(_torna_menu)
+	fine_dlg.confirmed.connect(_ok_fine)
 	add_child(fine_dlg)
 	regole_pop = AcceptDialog.new()
 	regole_pop.title = "Regole in breve"
@@ -750,6 +812,9 @@ func _aggiorna_ui() -> void:
 	var pl := Label.new()
 	# carta
 	var cid: String = s["carta"]
+	var at := m.atto_corrente()
+	if m.in_campagna() and at.get("t", "") == "camp" and at.get("passo", "") in ["evento", "inizio"] and s["camp"].has("ultimo"):
+		cid = s["camp"]["ultimo"]
 	carta_tex.texture = _tex_carta(cid)
 	var cd := m.carta_dati(cid)
 	lbl_carta.text = "1° idoneo: %s" % m.nome_faz(s["primo"])
@@ -802,6 +867,8 @@ func _intel_txt() -> String:
 func _tex_carta(cid: String) -> Texture2D:
 	if cid == "":
 		return null
+	if cid.begins_with("E") and cid.length() <= 3:
+		return load("res://assets/carte/campagna_%s.webp" % cid)
 	var p = "res://assets/carte/%s_%s.webp" % [m.gioco(), cid]
 	return load(p) if ResourceLoader.exists(p) else null
 
@@ -864,6 +931,12 @@ func _testo_stato() -> String:
 	t.append("%s disponibili: %s, %s" % [m.nome_faz("ins"), m.pz(m.disp("g"), "g"), m.pz(m.disp("b"), "b")])
 	if m.cellule():
 		t.append("Prigione: %s · Intel nel sacchetto: %d" % [m.pz(int(s["prigione"]), "g"), (s["borsa"] as Array).size()])
+	if m.in_campagna():
+		var c: Dictionary = s["camp"]
+		var at: Array = []
+		for k in c["attivi"]:
+			at.append(Campagna.dati_campagna().get(k, {}).get("titolo", k))
+		t.append("[color=#f0cf6e][b]Campagna End of Empire[/b] · partita %d di 4 · Prestigio imperiale [b]%d[/b]/15 · Politica: %s%s%s[/color]" % [Campagna.ORDINE.find(g) + 1, int(c["prestigio"]), Campagna.NOMI_POLITICA[c["politica"]], (" · in corso: " + ", ".join(at)) if not at.is_empty() else "", (" · %s sulla carta" % m.pz(int(c["truppe_carta"]), "t")) if int(c["truppe_carta"]) > 0 else ""])
 	var stima := m.stima_propaganda()
 	t.append("[color=#c9a24a]Se ci fosse ora la Propaganda: Volontà Politica %s%d[/color]" % ["+" if stima >= 0 else "", stima])
 	return "\n".join(t)
@@ -1005,8 +1078,14 @@ func _fine() -> void:
 	var v: String = fine.get("v", "")
 	var chi := "Vittoria britannica" if v == "brit" else ("Vittoria " + m.nome_faz("ins") if v == "ins" else "Pareggio")
 	fine_dlg.dialog_text = "%s\n\n%s\n\nVolontà Politica finale: %d" % [chi, fine.get("m", ""), int(m.s["pw"])]
-	fine_dlg.popup_centered(Vector2(520, 260))
-	_cancella_locale()
+	fine_dlg.ok_button_text = "Torna al menu"
+	if not campagna.is_empty() and m.in_campagna():
+		fine_dlg.dialog_text += "\n\n" + _fine_campagna()
+		if int(campagna["indice"]) < 4:
+			fine_dlg.ok_button_text = "Prossima partita: " + GIOCHI[Campagna.ORDINE[int(campagna["indice"])]]["nome"]
+	else:
+		_cancella_locale()
+	fine_dlg.popup_centered(Vector2(560, 320))
 
 
 func _torna_menu() -> void:
@@ -1018,6 +1097,7 @@ func _torna_menu() -> void:
 	menu.visible = true
 	m = null
 	_aggiorna_tasti_menu()
+	_aggiorna_menu_campagna()
 
 
 func _process(delta: float) -> void:
@@ -1040,6 +1120,11 @@ func _file_salva(g: String) -> String:
 
 func _salva_locale() -> void:
 	if online or m == null:
+		return
+	if not campagna.is_empty():
+		_salva_campagna()
+		if atti.size() % 4 == 0:
+			_salva_cloud(true)
 		return
 	var f := FileAccess.open(_file_salva(gioco_id), FileAccess.WRITE)
 	if f:
@@ -1067,6 +1152,7 @@ func _riprendi_locale() -> void:
 
 
 func _carica(d: Dictionary) -> void:
+	campagna = {}
 	controllo = d.get("controllo", {"brit": "umano", "ins": "ia"})
 	online = false
 	avvia(str(d["gioco"]), int(d["seme"]), d.get("opz", {}), d.get("atti", []), [])
@@ -1085,8 +1171,12 @@ func _salva_cloud(silenzioso: bool = false) -> void:
 	var tutti = await rete.carica_partita()
 	if not (tutti is Dictionary) or tutti.has("gioco"):
 		tutti = {}
-	tutti[gioco_id] = _dati_salvataggio()
-	tutti[gioco_id]["quando"] = Time.get_datetime_string_from_system()
+	if not campagna.is_empty():
+		campagna["atti"] = atti
+		tutti["campagna"] = campagna
+	else:
+		tutti[gioco_id] = _dati_salvataggio()
+		tutti[gioco_id]["quando"] = Time.get_datetime_string_from_system()
 	var ok = await rete.salva_partita(tutti)
 	_cloud_occupato = false
 	if not silenzioso:
@@ -1166,6 +1256,7 @@ func _entra_stanza() -> void:
 
 func _avvia_online(cfg: Dictionary, mia: String) -> void:
 	online = true
+	campagna = {}
 	net_k = 0
 	net_inviati = {}
 	controllo = {"brit": "umano" if mia == "brit" else "remoto", "ins": "umano" if mia == "ins" else "remoto"}
@@ -1291,3 +1382,119 @@ func _leggi_rete() -> void:
 		if n == atti.size() and r.size() > ans.size():
 			ans = r
 			_passo()
+
+
+# ================================================================ CAMPAGNA END OF EMPIRE
+
+const FILE_CAMPAGNA := "user://britishway_campagna.json"
+
+
+func _nuova_campagna(modo: String) -> void:
+	var early: Array = []
+	var late: Array = []
+	for i in range(1, 10):
+		early.append("E%d" % i)
+		late.append("E%d" % (i + 9))
+	early.shuffle()
+	late.shuffle()
+	campagna = {"seme": rng.randi() % 100000000 + 1, "controllo": _controllo_da_modo(modo), "prewar": "caso" if camp_prewar else 0,
+		"prestigio": 13, "esiti": {}, "early": early, "late": late, "indice": 0, "prev": "", "correnti": [], "atti": []}
+	online = false
+	_avvia_gioco_campagna()
+
+
+func _avvia_gioco_campagna() -> void:
+	var k := int(campagna["indice"])
+	var g: String = Campagna.ORDINE[k]
+	if (campagna["correnti"] as Array).is_empty():
+		var mazzo: Array = campagna["early"] if k < 2 else campagna["late"]
+		campagna["correnti"] = mazzo.slice(0, 3)
+		mazzo.assign(mazzo.slice(3))
+		if k == 1:
+			campagna["early"] = []
+	controllo = campagna["controllo"]
+	var o2 := {"campagna": {"prestigio": int(campagna["prestigio"]), "eventi": campagna["correnti"], "prev": campagna["prev"], "prewar": campagna["prewar"]}}
+	_seleziona_gioco(g)
+	avvia(g, int(campagna["seme"]) + k * 1009, o2, campagna.get("atti", []))
+
+
+func _salva_campagna() -> void:
+	if campagna.is_empty():
+		return
+	campagna["atti"] = atti
+	var f := FileAccess.open(FILE_CAMPAGNA, FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(campagna))
+
+
+func _riprendi_campagna(cloud: bool) -> void:
+	var d = null
+	if cloud:
+		menu_msg.text = "Carico la campagna salvata online…"
+		var tutti = await rete.carica_partita()
+		if tutti is Dictionary:
+			d = tutti.get("campagna", null)
+	else:
+		var f := FileAccess.open(FILE_CAMPAGNA, FileAccess.READ)
+		if f:
+			d = JSON.parse_string(f.get_as_text())
+	if not (d is Dictionary) or not d.has("indice"):
+		menu_msg.text = "Nessuna campagna da riprendere."
+		return
+	if int(d["indice"]) >= 4:
+		menu_msg.text = "La campagna salvata è già conclusa (Prestigio imperiale %d)." % int(d["prestigio"])
+		return
+	campagna = d
+	online = false
+	_avvia_gioco_campagna()
+
+
+func _aggiorna_menu_campagna() -> void:
+	if camp_lbl == null:
+		return
+	var f := FileAccess.open(FILE_CAMPAGNA, FileAccess.READ)
+	var d = JSON.parse_string(f.get_as_text()) if f else null
+	if d is Dictionary and d.has("indice"):
+		var k := int(d["indice"])
+		if k >= 4:
+			camp_lbl.text = "Ultima campagna conclusa con Prestigio imperiale %d: %s." % [int(d["prestigio"]), _esito_campagna(int(d["prestigio"]))]
+		else:
+			camp_lbl.text = "Campagna salvata: Prestigio imperiale %d, prossima partita %s." % [int(d["prestigio"]), GIOCHI[Campagna.ORDINE[k]]["nome"]]
+	else:
+		camp_lbl.text = ""
+
+
+func _esito_campagna(p: int) -> String:
+	if p >= 11:
+		return "Ritirata ordinata, vittoria britannica"
+	if p >= 5:
+		return "Vento del cambiamento (esito storico)"
+	return "Fuga dalle colonie, vittoria degli insorti"
+
+
+## Fine di una partita di campagna: aggiorna Prestigio ed esiti e propone la partita successiva.
+func _fine_campagna() -> String:
+	var g: String = m.gioco()
+	var es: String = m.s["camp"]["esito"]
+	campagna["esiti"][g] = es
+	campagna["prestigio"] = int(m.s["camp"]["prestigio"])
+	campagna["prev"] = es
+	campagna["indice"] = int(campagna["indice"]) + 1
+	campagna["correnti"] = []
+	campagna["atti"] = []
+	atti = []
+	_salva_campagna()
+	_salva_cloud(true)
+	var t := "Campagna: %s si chiude con %s. Prestigio imperiale ora %d." % [GIOCHI[g]["nome"], Campagna.NOMI_ESITO[es], int(campagna["prestigio"])]
+	if int(campagna["indice"]) >= 4:
+		t += "\n\nFINE DELLA CAMPAGNA: %s." % _esito_campagna(int(campagna["prestigio"]))
+	else:
+		t += "\n\nProssima partita: %s." % GIOCHI[Campagna.ORDINE[int(campagna["indice"])]]["nome"]
+	return t
+
+
+func _ok_fine() -> void:
+	if not campagna.is_empty() and int(campagna.get("indice", 4)) < 4:
+		_avvia_gioco_campagna()
+	else:
+		_torna_menu()
