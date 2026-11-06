@@ -206,6 +206,23 @@ func _disegna_tracce(u: float) -> void:
 		if t:
 			draw_texture_rect(t, Rect2(p - Vector2(lato, lato) * 0.5, Vector2(lato, lato)), false)
 			draw_rect(Rect2(p - Vector2(lato, lato) * 0.5, Vector2(lato, lato)), Tema.GOLD_HI, false, 2.0)
+	# forze disponibili (e Polizia fuori gioco in Kenya) nei riquadri del tabellone
+	var dp: Dictionary = tr.get("disp", {})
+	for f in dp:
+		var c0 := off + Vector2(float(dp[f][0]), float(dp[f][1])) * ts * zoom
+		var gruppi: Array = []
+		if f == "brit":
+			gruppi = [["t", m.disp("t")], ["p", m.disp("p")]]
+		elif f == "ins":
+			gruppi = [["u", m.disp("g")], ["b", m.disp("b")]]
+		else:
+			gruppi = [["p", int(m.s["fuori"])]]
+		var xx := c0.x - u * 1.6 * (gruppi.size() - 1)
+		for g in gruppi:
+			if int(g[1]) > 0:
+				_pezzo(Vector2(xx, c0.y), g[0], u)
+				_numero(Vector2(xx + u * 0.65, c0.y), int(g[1]), u)
+			xx += u * 3.2
 	# cilindri dell'Iniziativa
 	var iz: Array = tr["iniz"]
 	var caselle := ["limitata", "evento", "opsa"]
