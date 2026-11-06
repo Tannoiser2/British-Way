@@ -29,7 +29,7 @@ const COL_BASE := Color("a8301f")
 func _ready() -> void:
 	clip_contents = true
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	for n in ["sabotaggio", "terrore", "coprifuoco", "nuovo_villaggio", "supporto", "opposizione", "lealta", "resistenza",
+	for n in ["haganah", "opinione", "comandante", "gurney_ucciso", "pipeline", "sabotaggio", "terrore", "coprifuoco", "nuovo_villaggio", "supporto", "opposizione", "lealta", "resistenza",
 			"controllo_brit", "controllo_mcp", "controllo_brit_k", "controllo_maumau", "volonta", "pop0", "pop1"]:
 		_seg[n] = load("res://assets/segnalini/%s.png" % n)
 	resized.connect(adatta)
@@ -142,6 +142,7 @@ func _draw() -> void:
 	draw_texture_rect(tex, Rect2(off, ts * zoom), false)
 	var u: float = max(30.0 * zoom * (ts.x / 1700.0), 17.0)   # lato di un cubo
 	_disegna_pw(u)
+	_disegna_tracce(u)
 	if m.cellule():
 		_disegna_prigione(u)
 	for id in m.ordine:
@@ -185,6 +186,45 @@ func _disegna_pw(u: float) -> void:
 	var lato := u * 2.0
 	draw_texture_rect(t, Rect2(p - Vector2(lato, lato) * 0.5, Vector2(lato, lato)), false)
 	draw_rect(Rect2(p - Vector2(lato, lato) * 0.5, Vector2(lato, lato)), Tema.GOLD_HI, false, 2.0)
+
+
+func _disegna_tracce(u: float) -> void:
+	var tr: Dictionary = m.D.get("tracce", {})
+	if tr.is_empty():
+		return
+	var ts := tex.get_size()
+	# segnalino del tracciato del gioco (Haganah, Opinione, Comandante, Pipeline)
+	var val := int(m.s.get(tr["chiave"], 0))
+	var punti: Array = tr["traccia"]
+	if val >= 0 and val < punti.size():
+		var p := off + Vector2(float(punti[val][0]), float(punti[val][1])) * ts * zoom
+		var k: String = tr["traccia_seg"]
+		if k == "comandante" and m.s["tmp"].get("gurney", false):
+			k = "gurney_ucciso"
+		var t: Texture2D = _seg.get(k, null)
+		var lato := u * 1.7
+		if t:
+			draw_texture_rect(t, Rect2(p - Vector2(lato, lato) * 0.5, Vector2(lato, lato)), false)
+			draw_rect(Rect2(p - Vector2(lato, lato) * 0.5, Vector2(lato, lato)), Tema.GOLD_HI, false, 2.0)
+	# cilindri dell'Iniziativa
+	var iz: Array = tr["iniz"]
+	var caselle := ["limitata", "evento", "opsa"]
+	var posti := {}
+	for i in 3:
+		if m.s["scelte"].has(caselle[i]):
+			posti[m.s["scelte"][caselle[i]]] = i
+	for f in ["brit", "ins"]:
+		if not posti.has(f):
+			posti[f] = 3 if m.s["primo"] == f else 4
+	for f in posti:
+		var q: Array = iz[posti[f]]
+		var c := off + Vector2(float(q[0]), float(q[1])) * ts * zoom
+		var r := u * 0.55
+		var col: Color = Tema.FAZ[f]
+		draw_circle(c + Vector2(2, 3), r, Color(0, 0, 0, 0.35))
+		draw_circle(c, r, col)
+		draw_arc(c, r, 0, TAU, 24, col.darkened(0.5), 1.5, true)
+		draw_circle(c, r * 0.35, col.lightened(0.35))
 
 
 func _disegna_prigione(u: float) -> void:
