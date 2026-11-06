@@ -16,7 +16,10 @@ quattro giochi COIN per due giocatori, Britannici contro insorti.
   chi crea la stanza sceglie la fazione e comunica il codice di 4 lettere all'avversario.
 - Ogni decisione è una domanda nel pannello a destra: si risponde coi tasti o cliccando sugli spazi evidenziati sulla mappa.
   *Annulla* torna indietro di una decisione (solo nelle partite locali).
-- La partita si salva da sola sul dispositivo dopo ogni turno; *Salva online* la mette su Firebase per riprenderla altrove.
+- La partita si salva da sola sul dispositivo dopo ogni turno (una per ciascun gioco) e ogni quattro turni anche su Firebase;
+  *Salva online* la salva subito. Dal menu si riprende da questo dispositivo o dal salvataggio online.
+- Online: se si ricarica la pagina, *Rientra nell'ultima stanza online* ricostruisce la partita dal registro della stanza.
+- *Regole* apre il riassunto in italiano del gioco in corso (sequenza, Operazioni, Attività Speciali, Propaganda, vittoria).
 - Le carte sono ricomposte in italiano (foto originale, testi tradotti); clicca la carta per ingrandirla.
 
 ## Struttura
@@ -27,7 +30,11 @@ quattro giochi COIN per due giocatori, Britannici contro insorti.
 - `scripts/motore.gd` — valutazione delle posizioni; `ia.gd` — IA a simulazioni (prova molte giocate su copie dello stato, con dadi diversi).
 - `scripts/main.gd`, `mappa.gd`, `tema.gd` — interfaccia (stessa impostazione della GUI COIN di Cuba Libre); `rete.gd` — Firebase.
 - `dati/` — mappe (spazi, adiacenze, preparazione) e carte in italiano; `assets/` — tabelloni, carte, segnalini, caratteri (OFL).
-- `tests/sim.gd` — partite automatiche IA contro IA: `godot --headless -s res://tests/sim.gd -- tutti 3 8`.
+- `tests/sim.gd` — partite automatiche IA contro IA: `godot --headless -s res://tests/sim.gd -- tutti 3 60`;
+  `tests/test_regole.gd` — prove mirate delle regole; `tests/ui_casuale.gd` — interfaccia cliccata a caso;
+  `tests/online.gd` — due client contro un finto Firebase locale.
+
+Non è implementata la campagna «End of Empire» (le quattro partite collegate).
 - `tools/controlla_glifi.py` — verifica che ogni carattere usato esista nei font.
 
 ## Pubblicazione
