@@ -252,6 +252,8 @@ func numero(f: String, testo: String, minn: int, maxn: int, tag: String = "", ex
 		ops.append(o(i, str(i)))
 	var x := {"tag": tag, "num": true}
 	x.merge(extra)
+	if extra.get("basta", false):
+		ops.append(o(-1, "Basta così"))
 	var v = chiedi(f, testo, ops, x)
 	return 0 if v == null else int(v)
 

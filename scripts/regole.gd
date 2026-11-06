@@ -285,12 +285,25 @@ func _opz_intel() -> Array:
 ## Sposta pezzi k verso dest da spazi che soddisfano origine (una domanda per spazio d'origine).
 func raccogli(f: String, dest: String, k: String, origine: Callable, testo: String = "", tag: String = "muovi") -> int:
 	var tot := 0
+	var fonti: Array = []
 	for id in ordine:
-		if id == dest or int(X(id)[k]) <= 0 or not origine.call(id):
+		if id != dest and int(X(id)[k]) > 0 and origine.call(id):
+			fonti.append(id)
+	if fonti.size() >= 2:
+		var opz: Array = [o("si", "Scegli spazio per spazio (%d spazi)" % fonti.size()), o("no", "Nessuno")]
+		var v = chiedi(f, "%s: vuoi spostare %s verso %s?" % [testo, nome_pezzo(k, 2) if k != "p" else "Polizia", nome_sp(dest)], opz, {"tag": tag + "_si", "a": dest})
+		if ferma() or v == "no":
+			return 0
+	for j in fonti.size():
+		var id: String = fonti[j]
+		if int(X(id)[k]) <= 0:
 			continue
-		var n = numero(f, "%s: quanti %s da %s a %s?" % [testo, nome_pezzo(k, 2), nome_sp(id), nome_sp(dest)], 0, int(X(id)[k]), tag)
+		var dom: String = "%s: quante %s da %s a %s?" % [testo, nome_pezzo(k, 2), nome_sp(id), nome_sp(dest)] if k != "p" else "%s: quanta Polizia da %s a %s?" % [testo, nome_sp(id), nome_sp(dest)]
+		var n: int = numero(f, dom, 0, int(X(id)[k]), tag, {"da": id, "a": dest, "basta": j < fonti.size() - 1})
 		if ferma():
 			return tot
+		if n < 0:
+			break
 		if n > 0:
 			muovi(id, dest, k, n)
 			tot += n
@@ -1067,14 +1080,15 @@ func op_train(f: String, p: Dictionary) -> void:
 			piazza(id, "p", np)
 			nota("Addestramento a Kuala Lumpur: %s, %s." % [pz(nt, "t"), pz(np, "p")])
 		else:
-			var np = numero(f, "%s: quanta Polizia piazzi?" % nome_sp(id), 0, min(2, max(disp("p"), 2)), "train_p")
+			var np: int = numero(f, "%s: quanta Polizia piazzi?" % nome_sp(id), 0, 2, "train_p")
 			if ferma() or np == 0:
 				return
 			if int(s["ris"]["brit"]) < costo:
 				return
-			cambia_ris("brit", -costo)
 			var k := piazza(id, "p", np)
-			nota("Addestramento a %s: %s." % [nome_sp(id), pz(k, "p")])
+			if k > 0:
+				cambia_ris("brit", -costo)
+				nota("Addestramento a %s: %s." % [nome_sp(id), pz(k, "p")])
 	)
 	if ferma():
 		return

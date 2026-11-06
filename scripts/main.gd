@@ -897,7 +897,7 @@ func _mostra_domanda(chi: String) -> void:
 	for o in opzioni:
 		if str(o["t"]).length() > 22:
 			lunghe = true
-	box_opz.columns = 1 if lunghe else (6 if num else 2)
+	box_opz.columns = 1 if lunghe else (5 if num else 2)
 	if str(q.get("x", {}).get("tag", "")) in ["op", "sa"] or q.get("x", {}).get("spazi", false):
 		box_opz.columns = 1
 	for o in opzioni:
@@ -910,7 +910,7 @@ func _mostra_domanda(chi: String) -> void:
 		b.custom_minimum_size = Vector2(0, 44 if not num else 40)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if lunghe else TextServer.AUTOWRAP_OFF
-		var passivo: bool = v is String and v in ["fine", "passa", "no", "nessuna"]
+		var passivo: bool = (v is String and v in ["fine", "passa", "no", "nessuna"]) or (v is int and v < 0)
 		Tema.tasto_carta(b, not passivo and not num and not spazi, Tema.FAZ[f])
 		b.pressed.connect(rispondi.bind(v))
 		box_opz.add_child(b)
