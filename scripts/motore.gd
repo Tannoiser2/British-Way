@@ -27,7 +27,10 @@ func stima_propaganda() -> int:
 			if ferr == 0:
 				d += 2
 		"cipro":
-			d -= int(s["opinione"])
+			if s.get("avanzata", false):
+				d -= min(4, int(s["opinione"]) + int(s["prigione"]) / 3)
+			else:
+				d -= int(s["opinione"])
 			var pulite := 0
 			var dep := false
 			for id in ordine:

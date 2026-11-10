@@ -46,8 +46,8 @@ const DESC_OP := {
 		"patrol": "Sposta Polizia verso spazi (non Monti) con Cellule; in 1 spazio manda in Prigione 1 Cellula attiva per Polizia.",
 		"search": "Truppe adiacenti entrano; attiva Cellule (1 per cubo; nelle Città Coprifuoco e 1 ogni 3).",
 		"assault": "Rimuove 1 pezzo EOKA attivo per Truppa (ogni 2 nei Monti); Depositi solo senza Cellule.",
-		"recruit": "1 Cellula in Città/Monti senza Coprifuoco con o vicino a un Deposito (2 nei Monti col Deposito).",
-		"travel": "Sposta le Cellule di 1-3 spazi d'origine ovunque e le rende clandestine.",
+		"recruit": "1 Cellula in Città/Monti senza Coprifuoco con o vicino a un Deposito (2 nei Monti col Deposito). Variante avanzata: nei Monti sempre almeno 1.",
+		"travel": "Sposta le Cellule di 1-3 spazi d'origine ovunque e le rende clandestine. Variante avanzata: mai da Città con Coprifuoco.",
 		"sabotage": "In Città/Basi: attiva 1 Cellula clandestina e tira: oltre 2 (−1 per Polizia, +2 col Deposito) piazza Sabotaggio.",
 		"ambush": "In Città: attiva 1 Cellula, rimuovi 1 Polizia; se il dado supera i cubi rimasti piazza un Deposito.",
 	},
@@ -78,7 +78,7 @@ const DESC_SA := {
 	"negotiate": "Dado (+1 per Terrore): se supera l'Haganah, la sposta a sinistra; a 0 dà 1 Intel.",
 	"detention": "In 1 Città con Coprifuoco e 3 Truppe: un dado di Cellule in Prigione (Città e Distretto); l'eccesso costa VP.",
 	"silence": "In 1 spazio con almeno tante Cellule clandestine quanta Polizia: rimuove 1 Polizia.",
-	"propagandize": "Palestina: fino a 2 Città con Cellula e Coprifuoco, −1 VP ciascuna. Cipro: 1 spazio con Cellula e Sabotaggio (−1 VP) o Coprifuoco (Opinione +2).",
+	"propagandize": "Palestina: fino a 2 Città con Cellula e Coprifuoco, −1 VP ciascuna. Cipro: 1 spazio con Cellula e Sabotaggio (−1 VP) o Coprifuoco (Opinione +2; variante avanzata: solo senza Sabotaggio).",
 	"terror": "In 1 Città del Sabotaggio: Terrore invece di Sabotaggio; con 6 o più, 2 Terrori e l'Haganah scende.",
 	"diplomacy": "Opinione internazionale −1 (se più di 3 Città hanno Sabotaggi o Coprifuochi serve un dado maggiore dell'Opinione).",
 	"interrogate": "1 Intel ogni 2 Cellule in Prigione.",
@@ -191,7 +191,7 @@ func op_possibile(f: String, id: String, _limitata: bool) -> bool:
 	match id:
 		"deploy", "patrol", "search", "travel", "train", "garrison", "sweep", "march":
 			if id == "travel":
-				return ordine.any(func(x): return gue(x) > 0)
+				return ordine.any(func(x): return gue(x) > 0 and _travel_origine_ok(x))
 			if id == "patrol":
 				return ordine.any(func(x): return gue(x) > 0) and (disp("p") > 0 or ordine.any(func(x): return int(X(x)["p"]) > 0))
 			if gioco() == "malesia":
@@ -569,6 +569,9 @@ func _recruit_max(id: String) -> int:
 			return 2
 		return 1 if tipo(id) == "citta" else 0
 	if gioco() == "cipro":
+		# variante avanzata: nei Monti si può sempre piazzare almeno 1 Cellula
+		if s.get("avanzata", false) and tipo(id) == "montagna" and not _vicino_deposito(id):
+			return 1
 		if not (tipo(id) in ["citta", "montagna"]) or not _vicino_deposito(id):
 			return 0
 		return 2 if tipo(id) == "montagna" and int(x["b"]) > 0 else 1
@@ -587,7 +590,7 @@ func op_recruit(f: String, p: Dictionary) -> void:
 
 
 func op_travel(f: String, p: Dictionary) -> void:
-	ciclo(f, p, "Spostamento: scegli uno spazio d'origine con Cellule", func(id): return gue(id) > 0 and p.get("filtro", func(_x): return true).call(id), func(orig):
+	ciclo(f, p, "Spostamento: scegli uno spazio d'origine con Cellule", func(id): return gue(id) > 0 and _travel_origine_ok(id) and p.get("filtro", func(_x): return true).call(id), func(orig):
 		var tot := gue(orig)
 		# tutte le Cellule dell'origine "si muovono" (anche verso l'origine stessa)
 		var arrivi := {}
@@ -629,6 +632,11 @@ func op_travel(f: String, p: Dictionary) -> void:
 				nota("%s da %s a %s%s." % [pz(n, "g"), nome_sp(orig), nome_sp(dest), " (attive)" if att else ""])
 		_dopo(orig)
 	)
+
+
+## Variante avanzata di Cipro: niente Spostamento da Città con Coprifuoco.
+func _travel_origine_ok(id: String) -> bool:
+	return not (s.get("avanzata", false) and tipo(id) == "citta" and int(X(id)["cf"]) > 0)
 
 
 func _sabotage_ok(id: String) -> bool:
@@ -869,7 +877,8 @@ func sa_propagandize(f: String, p: Dictionary) -> void:
 			cambia_pw(-2 if cap("P25") == "s" or e9 else -1, "Propaganda a " + nome_sp(sp))
 		else:
 			var scelta = "sab" if int(X(sp)["sab"]) > 0 else "cf"
-			if int(X(sp)["sab"]) > 0 and int(X(sp)["cf"]) > 0:
+			# variante avanzata: l'Opinione sale solo nei Coprifuochi senza Sabotaggio
+			if int(X(sp)["sab"]) > 0 and int(X(sp)["cf"]) > 0 and not s.get("avanzata", false):
 				scelta = chiedi(f, "Propaganda a %s: cosa ottieni?" % nome_sp(sp), [o("sab", "−1 Volontà Politica"), o("cf", "Opinione internazionale +%d" % (1 if cap("C13") == "u" else 2))], {"tag": "propag_scelta"})
 				if ferma():
 					return

@@ -77,6 +77,8 @@ var codice_edit: LineEdit
 var sel_gioco_btns: Dictionary = {}
 var campagna: Dictionary = {}       # campagna End of Empire in corso (vuoto = partita singola)
 var camp_prewar := true
+var opz_menu := {"lungo": false, "avanzata": true}
+var camp_avanzata := true
 var camp_lbl: Label
 var camp_codice_edit: LineEdit
 var _camp_cloud_occupato := false
@@ -230,11 +232,22 @@ func _costruisci_menu() -> void:
 	bc.pressed.connect(_riprendi_cloud)
 	bc.set_meta("riprendi", "cloud")
 	g1.add_child(bc)
+	var rch := HBoxContainer.new()
+	rch.add_theme_constant_override("separation", 14)
+	pv.add_child(rch)
 	var lunga := CheckBox.new()
-	lunga.text = "Malesia: scenario esteso (mazzo di 27 carte)"
+	lunga.text = "Malesia: scenario esteso"
+	lunga.tooltip_text = "Mazzo di 27 carte invece di 21"
 	_stile_check(lunga)
-	lunga.toggled.connect(func(v): opz["lungo"] = v)
-	pv.add_child(lunga)
+	lunga.toggled.connect(func(v): opz_menu["lungo"] = v)
+	rch.add_child(lunga)
+	var avz := CheckBox.new()
+	avz.text = "Cipro: variante avanzata"
+	avz.tooltip_text = "Regola standard dalla 2ª edizione: Reclutamento sempre possibile nei Monti, niente Spostamento dai Coprifuochi, Opinione che sale con i prigionieri"
+	avz.button_pressed = true
+	_stile_check(avz)
+	avz.toggled.connect(func(v): opz_menu["avanzata"] = v)
+	rch.add_child(avz)
 	pv.add_child(_lbl_carta("Online", 22, true))
 	var r3 := HBoxContainer.new()
 	r3.add_theme_constant_override("separation", 6)
@@ -322,7 +335,17 @@ func _costruisci_menu() -> void:
 	pw.button_pressed = true
 	_stile_check(pw)
 	pw.toggled.connect(func(v): camp_prewar = v)
-	cv.add_child(pw)
+	var rpw := HBoxContainer.new()
+	rpw.add_theme_constant_override("separation", 14)
+	cv.add_child(rpw)
+	rpw.add_child(pw)
+	var cavz := CheckBox.new()
+	cavz.text = "Cipro: variante avanzata"
+	cavz.tooltip_text = "Regola standard dalla 2ª edizione"
+	cavz.button_pressed = true
+	_stile_check(cavz)
+	cavz.toggled.connect(func(v): camp_avanzata = v)
+	rpw.add_child(cavz)
 	var rc3 := HBoxContainer.new()
 	rc3.add_theme_constant_override("separation", 6)
 	cv.add_child(rc3)
@@ -427,9 +450,7 @@ func _nuova_locale(modo: String) -> void:
 		"demo":
 			controllo = {"brit": "ia", "ins": "ia"}
 	online = false
-	var o2 := {}
-	if gioco_id == "malesia" and opz.get("lungo", false):
-		o2["lungo"] = true
+	var o2 := _opz_partita(gioco_id)
 	avvia(gioco_id, rng.randi() % 1000000000 + 1, o2, [])
 
 
@@ -746,7 +767,7 @@ func avvia(g: String, sm: int, o2: Dictionary, atti_prec: Array, ans_prec: Array
 	var in_camp: bool = o2.has("campagna")
 	btn_campagna.visible = in_camp
 	btn_salva_online.visible = not in_camp
-	(partita.find_child("Sotto", true, false) as Label).text = "%s %s · Britannici contro %s" % [GIOCHI[g]["nome"], GIOCHI[g]["anni"], GIOCHI[g]["ins"]]
+	(partita.find_child("Sotto", true, false) as Label).text = "%s %s · Britannici contro %s%s" % [GIOCHI[g]["nome"], GIOCHI[g]["anni"], GIOCHI[g]["ins"], " · variante avanzata" if o2.get("avanzata", false) else ""]
 	_disposizione(g == "cipro")
 	mappa.imposta(m)
 	call_deferred("_passo")
@@ -1347,7 +1368,7 @@ func _crea_stanza(fazione: String) -> void:
 	if nome == "":
 		nome = "Giocatore"
 	var sm := rng.randi() % 1000000000 + 1
-	var cfg := {"gioco": gioco_id, "seme": sm, "host": fazione, "opz": {}}
+	var cfg := {"gioco": gioco_id, "seme": sm, "host": fazione, "opz": _opz_partita(gioco_id)}
 	var code = await rete.create_room(nome, cfg)
 	if code == "":
 		menu_msg.text = "Impossibile creare la stanza: " + rete.last_error
@@ -1541,7 +1562,7 @@ func _nuova_campagna(modo: String) -> void:
 		late.append("E%d" % (i + 9))
 	early.shuffle()
 	late.shuffle()
-	campagna = {"codice": _nuovo_codice_campagna(), "seme": rng.randi() % 100000000 + 1, "controllo": _controllo_da_modo(modo), "prewar": "caso" if camp_prewar else 0,
+	campagna = {"codice": _nuovo_codice_campagna(), "seme": rng.randi() % 100000000 + 1, "controllo": _controllo_da_modo(modo), "prewar": "caso" if camp_prewar else 0, "avanzata": camp_avanzata,
 		"prestigio": 13, "esiti": {}, "early": early, "late": late, "indice": 0, "prev": "", "correnti": [], "atti": []}
 	online = false
 	_salva_campagna()
@@ -1561,6 +1582,8 @@ func _avvia_gioco_campagna() -> void:
 			campagna["early"] = []
 	controllo = campagna["controllo"]
 	var o2 := {"campagna": {"prestigio": int(campagna["prestigio"]), "eventi": campagna["correnti"], "prev": campagna["prev"], "prewar": campagna["prewar"]}}
+	if g == "cipro" and campagna.get("avanzata", false):
+		o2["avanzata"] = true
 	_seleziona_gioco(g)
 	avvia(g, int(campagna["seme"]) + k * 1009, o2, campagna.get("atti", []))
 
@@ -1901,3 +1924,13 @@ func _camp_avanti() -> void:
 		return
 	camp_scr.visible = false
 	_avvia_gioco_campagna()
+
+
+## Opzioni di regola scelte nel menu per una nuova partita.
+func _opz_partita(g: String) -> Dictionary:
+	var o2 := {}
+	if g == "malesia" and opz_menu.get("lungo", false):
+		o2["lungo"] = true
+	if g == "cipro" and opz_menu.get("avanzata", false):
+		o2["avanzata"] = true
+	return o2

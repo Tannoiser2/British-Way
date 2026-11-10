@@ -43,3 +43,14 @@ Scartati perché peggioravano il gioco: il valore dell'iniziativa («uno-due»),
 Per l'EOKA a Cipro i criteri restano accesi.
 
 Uso: `godot --headless -s res://tests/confronto.gd -- <gioco> <partite> <simulazioni> <vv|nv|vn|nn> [seme] [criteri spenti]`
+
+## Variante avanzata di Cipro
+Opzione nel menu (attiva di default), per la partita singola, online e in campagna. È la variante pubblicata su InsideGMT
+nel 2023 e diventata regola standard nella 2ª edizione:
+1. Reclutamento: nei Monti si può sempre piazzare 1 Cellula, anche senza Deposito presente o vicino.
+2. Spostamento: le Città con Coprifuoco non possono essere spazi d'origine.
+3. Propagandize: l'Opinione internazionale sale solo nei Coprifuochi con Cellula e senza Sabotaggio; con il Sabotaggio si toglie 1 VP come sempre.
+4. Pressione internazionale: nella fase della Volontà Politica l'Opinione sale di 1 ogni 3 Cellule in Prigione, poi si toglie l'Opinione dalla VP.
+
+Banco di prova (IA contro IA, 40 partite): Britannici vincenti 23-24 su 40 con la variante, 26-28 senza.
+Test delle regole: `tests/variante_cipro.gd`.

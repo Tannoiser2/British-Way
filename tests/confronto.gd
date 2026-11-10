@@ -17,7 +17,7 @@ func _init() -> void:
 	var tot_pw := 0
 	for k in n:
 		var m := Motore.new()
-		m.nuova(g, 5000 + k * 31 + (int(a[4]) * 1000 if a.size() > 4 else 0))
+		m.nuova(g, 5000 + k * 31 + (int(a[4]) * 1000 if a.size() > 4 else 0), {"avanzata": a.size() > 6 and a[6] == "avz"})
 		var piano: Array = []
 		var atti := 0
 		while not m.finita() and atti < 400:

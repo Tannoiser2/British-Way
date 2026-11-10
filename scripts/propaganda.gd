@@ -40,6 +40,9 @@ func prop_inizio() -> void:
 			if citta_pulite:
 				righe.append("Città senza Sabotaggi né Terrore: +%d" % citta_pulite)
 		"cipro":
+			if s.get("avanzata", false) and int(s["prigione"]) >= 3:
+				nota("Pressione internazionale per i prigionieri: %d Cellule in Prigione." % int(s["prigione"]))
+				sposta_opinione(int(s["prigione"]) / 3)
 			var op := int(s["opinione"])
 			if (s.get("camp", {}) as Dictionary).get("attivi", {}).has("E15"):
 				op = op / 2

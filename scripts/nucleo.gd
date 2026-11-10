@@ -138,6 +138,8 @@ func nuova(gioco_id: String, seme: int, opzioni: Dictionary = {}) -> void:
 	s["carta"] = ""
 	s["camp"] = {}
 	s["esclusi"] = []
+	# variante avanzata di Cipro (InsideGMT 2023, regola standard dalla 2ª edizione)
+	s["avanzata"] = gioco_id == "cipro" and bool(opzioni.get("avanzata", false))
 	if opzioni.has("campagna"):
 		_prepara_campagna(opzioni["campagna"])
 	s["mazzo"] = _costruisci_mazzo(opzioni.get("lungo", false))
