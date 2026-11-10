@@ -165,8 +165,94 @@ func valuta_brit() -> float:
 	return v
 
 
+## Criteri di lungo periodo tratti dalle guide strategiche ufficiali (Strategy Guide dei quattro regolamenti)
+## e dalle discussioni dei giocatori. Valore dal punto di vista britannico. Si può spegnere per lato (banco di prova).
+static var strategia := {"brit": true, "ins": true}
+static var spenti: Array = []
+
+
+func strategia_brit() -> float:
+	if finita():
+		return 0.0
+	var v := 0.0
+	if "gioco" in spenti:
+		return v
+	match gioco():
+		"malesia":
+			for id in ordine:
+				var x := X(id)
+				var t := tipo(id)
+				# «Economic attrition»: i Centri economici scoperti sono il bersaglio preferito dell'MCP
+				if t == "ec":
+					var minaccia := 0
+					for a in SP[id]["adj"]:
+						minaccia += int(X(a)["u"])
+					minaccia += int(x["u"])
+					if int(x["sab"]) == 0:
+						v -= max(0, min(minaccia, 3) - cubi(id)) * 1.5
+					else:
+						v -= 3.0
+					v += min(cubi(id), 2) * 0.8
+				# Base in Thailandia: quasi intoccabile e rende Risorse per tutta la partita
+				if t == "thai":
+					v -= float(x["b"]) * 4.0
+				# «Clear, Secure, Pacify»: Polizia e Nuovi Villaggi dove l'MCP non controlla, presto
+				if t in ["prov_g", "prov_m", "kl"]:
+					var pop := popolazione(id)
+					if x["ctrl"] != "ins" and pop > 0:
+						v += min(int(x["p"]), 2) * 0.6
+						if int(x["nv"]) > 0 and int(x["sup"]) >= 0:
+							v += 1.0
+					# «Maintain presence»: l'MCP vuole essere ovunque la popolazione conta
+					if pop > 0 and gue(id) > 0 and cubi(id) == 0:
+						v -= 0.8 * pop
+		"kenya":
+			for id in ordine:
+				var x := X(id)
+				var t := tipo(id)
+				# «Protect the settlers»: Nairobi e Province non di Riserva scoperte con Guerriglie vicine
+				if t in ["nairobi", "prov_n"]:
+					var vicine := int(x["u"])
+					for a in SP[id]["adj"]:
+						vicine += int(X(a)["u"])
+					if int(x["ter"]) == 0 and cubi(id) < 2:
+						v -= min(vicine, 2) * 1.2
+				# «Secure the Reserves»: Riserve popolate con presenza Mau Mau
+				if t == "prov_r" and ins_n(id) > 0:
+					v -= float(popolazione(id)) * 1.0
+				# spingerli nelle Giungle di montagna: fuori dalle giungle i Mau Mau pesano di più
+				if t != "giungla":
+					v -= float(gue(id)) * 0.8
+			# «Maintain pressure»: le Risorse Mau Mau sono scarse e decisive
+			v -= float(s["ris"]["ins"]) * 0.8
+		"cipro":
+			for id in ordine:
+				var x := X(id)
+				var t := tipo(id)
+				# «Buddy system»: la Polizia isolata è il bersaglio di Infiltrazione (e costa Intel)
+				if t == "citta" and int(x["p"]) == 1 and int(x["t"]) == 0:
+					var cellule_vicine := int(x["u"])
+					for a in SP[id]["adj"]:
+						cellule_vicine += int(X(a)["u"])
+					if cellule_vicine > 0:
+						v -= 1.5
+				# «Prepare and then strike»: Depositi in Città con Cellule clandestine = Sabotaggio imminente
+				if t in ["citta", "base"] and int(x["b"]) > 0 and int(x["u"]) > 0 and int(x["sab"]) == 0:
+					v -= 1.5
+				# Coprifuoco senza Cellule: Città messa in sicurezza (vale fino a 2 VP a fine campagna)
+				if t == "citta" and int(x["cf"]) > 0:
+					v += 1.0 if gue(id) == 0 else -1.0
+			# «Follow the intel»: Intel e Prigione si alimentano a vicenda
+			v += min(float(s["prigione"]), 6.0) * 0.8
+	return v
+
+
 func valuta(f: String) -> float:
 	var v := valuta_brit()
+	# Dal banco di prova (partite IA contro IA, 40 per configurazione): i criteri aiutano i Britannici in Malesia,
+	# Kenya e Cipro e l'EOKA a Cipro; in Palestina e per MCP e Mau Mau peggioravano il gioco, quindi restano spenti.
+	if strategia.get(f, true) and gioco() != "palestina" and (f == "brit" or gioco() == "cipro"):
+		v += strategia_brit()
 	if in_campagna() and not finita():
 		v += stima_prestigio() * 12.0
 	elif in_campagna():
